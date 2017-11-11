@@ -36,6 +36,17 @@ public class CountryServiceImpl implements CountryService {
 
 	public Country editCountry(Country country) {
 		
+		Country existingCountry = countryRepository.findCountryByCountryId(country.getCountryId());
+		
+		if(null != existingCountry) {
+			Country foundCountry = countryRepository.findByCountryName(country.getCountryName());
+			
+			if(null == foundCountry) {
+				existingCountry.setCountryName(country.getCountryName());
+				return countryRepository.save(existingCountry);
+			}	
+		}
+	
 		return null;
 	}
 }
