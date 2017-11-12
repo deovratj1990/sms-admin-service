@@ -6,12 +6,12 @@ import com.sms.domain.Country;
 
 public interface CountryService {
 	
-	public List<Country> getCountries();
+	public List<Country> getAll();
 	
-	public Country addCountry(Country country);
+	public Country add(Country country);
 	
-	public Country getCountryByCountryId(Long countryId);
+	public Country getByCountryId(Long countryId);
 	
-	public Country editCountry(Country country);
+	public Country edit(Country country);
 	
 }

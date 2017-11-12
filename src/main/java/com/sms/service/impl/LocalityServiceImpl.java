@@ -15,13 +15,13 @@ public class LocalityServiceImpl implements LocalityService {
 	@Autowired
 	LocalityRepository localityRepository;
 	
-	public Locality saveLocality(Locality locality) {
+	public Locality add(Locality locality) {
 		
 		return localityRepository.save(locality);
 		
 	}
 
-	public List<Locality> getLocalityByPincodeId(Long localityId) {
+	public List<Locality> getByPincodeId(Long localityId) {
 		
 		return localityRepository.findLocalityByPincodeId(localityId);
 	

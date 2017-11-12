@@ -15,11 +15,11 @@ public class CityServiceImpl implements CityService {
 	@Autowired
 	CityRepository cityRepository;
 	
-	public City saveCity(City city) {
+	public City add(City city) {
 		return cityRepository.save(city);
 	}
 
-	public List<City> getCityByStateId(Long stateId) {
+	public List<City> getByStateId(Long stateId) {
 		return cityRepository.findCityByStateId(stateId);		
 	}
 }

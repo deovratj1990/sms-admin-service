@@ -6,8 +6,8 @@ import com.sms.domain.City;
 
 public interface CityService {
 	
-	public City saveCity(City city);
+	public City add(City city);
 	
-	public List<City> getCityByStateId(Long stateId);
+	public List<City> getByStateId(Long stateId);
 
 }

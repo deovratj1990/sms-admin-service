@@ -6,8 +6,8 @@ import com.sms.domain.Pincode;
 
 public interface PincodeService {
 	
-	public Pincode savePincode(Pincode pincode);
+	public Pincode add(Pincode pincode);
 	
-	public List<Pincode> getPincodeByCityId(Long cityId);
+	public List<Pincode> getByCityId(Long cityId);
 
 }

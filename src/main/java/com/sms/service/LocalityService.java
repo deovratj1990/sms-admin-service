@@ -6,8 +6,8 @@ import com.sms.domain.Locality;
 
 public interface LocalityService {
 	
-	public Locality saveLocality(Locality locality);
+	public Locality add(Locality locality);
 	
-	public List<Locality> getLocalityByPincodeId(Long localityId);
+	public List<Locality> getByPincodeId(Long localityId);
 
 }

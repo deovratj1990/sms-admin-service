@@ -1,12 +1,15 @@
 package com.sms.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.sms.domain.State;
 
 public interface StateService {
 	
-	public List<State> getStateByCountryId(Long id);
-	public State saveState(State state);
+	public List<Map<String, String>> getAll();
+	public List<State> getByCountryId(Long countryId);
+	public State add(State state);
+	public State getByStateId(Long stateId);
 	
 }

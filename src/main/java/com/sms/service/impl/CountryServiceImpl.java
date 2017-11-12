@@ -12,16 +12,15 @@ import com.sms.service.CountryService;
 @Service
 public class CountryServiceImpl implements CountryService {
 
-	
 	@Autowired
 	CountryRepository countryRepository;
 	
-	public List<Country> getCountries() {
+	public List<Country> getAll() {
 		List<Country> list = (List<Country>) countryRepository.findAll();
 		return list;
 	}
 
-	public Country addCountry(Country country) {
+	public Country add(Country country) {
 		if(null == countryRepository.findByCountryName(country.getCountryName())) {
 			Country savedCountry = countryRepository.save(country);
 			return savedCountry;
@@ -30,11 +29,11 @@ public class CountryServiceImpl implements CountryService {
 		}
 	}
 
-	public Country getCountryByCountryId(Long countryId) {
+	public Country getByCountryId(Long countryId) {
 		return countryRepository.findCountryByCountryId(countryId);
 	}
 
-	public Country editCountry(Country country) {
+	public Country edit(Country country) {
 		
 		Country existingCountry = countryRepository.findCountryByCountryId(country.getCountryId());
 		

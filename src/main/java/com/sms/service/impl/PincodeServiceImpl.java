@@ -15,12 +15,12 @@ public class PincodeServiceImpl implements PincodeService {
 	@Autowired
 	PincodeRepository pincodeRepository;
 	
-	public Pincode savePincode(Pincode pincode) {
+	public Pincode add(Pincode pincode) {
 		
 		return pincodeRepository.save(pincode);
 	}
 
-	public List<Pincode> getPincodeByCityId(Long cityId) {
+	public List<Pincode> getByCityId(Long cityId) {
 
 		return pincodeRepository.findPincodeByCityId(cityId);
 
