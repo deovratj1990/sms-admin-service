@@ -13,8 +13,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 
-	public User validateCredentials(String email, String password) {
-		User user = userRepository.findByEmailAndPassword(email, password);
+	public User validateCredentials(String userEmail, String userPassword) {
+		User user = userRepository.findByUserEmailAndUserPassword(userEmail, userPassword);
 		
 		return user;
 	}

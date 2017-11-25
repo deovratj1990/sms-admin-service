@@ -15,8 +15,8 @@ import com.sms.domain.Country;
 import com.sms.service.CountryService;
 
 @RestController
-@CrossOrigin(origins="*")
 @RequestMapping(path="/country")
+@CrossOrigin(origins="*")
 public class CountryController {
 	
 	@Autowired

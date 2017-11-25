@@ -2,12 +2,14 @@ package com.sms.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/healthChecker")
+@CrossOrigin(origins = "*")
 public class HealthCheckerController {
 	@RequestMapping(method = RequestMethod.GET, path = "/status")
 	public ResponseEntity<String> status() {

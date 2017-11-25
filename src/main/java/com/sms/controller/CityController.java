@@ -15,8 +15,8 @@ import com.sms.domain.City;
 import com.sms.service.CityService;
 
 @RestController
-@CrossOrigin(origins="*")
 @RequestMapping(path="/city")
+@CrossOrigin(origins="*")
 public class CityController {
 
 	@Autowired

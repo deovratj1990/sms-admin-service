@@ -15,8 +15,8 @@ import com.sms.domain.Pincode;
 import com.sms.service.PincodeService;
 
 @RestController
-@CrossOrigin(origins="*")
 @RequestMapping(path="/pincode")
+@CrossOrigin(origins="*")
 public class PincodeController {
 	
 	@Autowired

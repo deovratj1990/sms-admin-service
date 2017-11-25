@@ -5,18 +5,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "tbl_country")
 public class Country {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "country_id")
+	@Column
 	private Long countryId;
 	
-	@Column(name = "country_name")
+	@Column
 	private String countryName;
 
 	public String getCountryName() {

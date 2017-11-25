@@ -5,20 +5,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
-@Table(name="tbl_locality")
 public class Locality {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="locality_id")
+	@Column
 	private Long localityId;
 	
-	@Column(name="locality_name")
+	@Column
 	private String localityName;
 	
-	@Column(name="pincode_id")
+	@Column
 	private Long pincodeId;
 
 	public Long getLocalityId() {

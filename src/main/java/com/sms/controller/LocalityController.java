@@ -15,8 +15,8 @@ import com.sms.domain.Locality;
 import com.sms.service.LocalityService;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping(path="/locality")
+@CrossOrigin(origins = "*")
 public class LocalityController {
 	
 	@Autowired

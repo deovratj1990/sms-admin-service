@@ -5,21 +5,22 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "tbl_user")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "user_id")
+	@Column
 	private Long userId;
 	
-	@Column(name = "email")
-	private String email;
+	@Column
+	private String userEmail;
 	
-	@Column(name = "password")
-	private String password;
+	@Column
+	private String userPassword;
+	
+	@Column
+	private Long roleId;
 
 	public Long getUserId() {
 		return userId;
@@ -29,19 +30,23 @@ public class User {
 		this.userId = userId;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getUserEmail() {
+		return userEmail;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 
-	public String getPassword() {
-		return password;
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public Long getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
 	}
 }

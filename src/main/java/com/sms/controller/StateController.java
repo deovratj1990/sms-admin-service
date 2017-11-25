@@ -16,8 +16,8 @@ import com.sms.domain.State;
 import com.sms.service.StateService;
 
 @RestController
-@CrossOrigin(origins="*")
 @RequestMapping(path="/state")
+@CrossOrigin(origins="*")
 public class StateController {
 	
 	@Autowired
