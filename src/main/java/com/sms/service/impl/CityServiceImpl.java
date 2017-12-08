@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sms.domain.City;
-import com.sms.repository.CityRepository;
+import com.sms.repo.CityRepository;
 import com.sms.service.CityService;
 
 @Service

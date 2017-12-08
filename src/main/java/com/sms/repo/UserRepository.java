@@ -1,4 +1,4 @@
-package com.sms.repository;
+package com.sms.repo;
 
 import org.springframework.data.repository.CrudRepository;
 

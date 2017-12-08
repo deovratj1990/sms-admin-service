@@ -1,6 +1,6 @@
-package com.sms.security;
+package com.sms.security.permission;
 
-public enum AccessType {
+public enum Permission {
 	COUNTRY_CREATE,
 	COUNTRY_READ,
 	COUNTRY_UPDATE,

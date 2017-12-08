@@ -1,6 +1,5 @@
 package com.sms.controller;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sms.domain.User;
-import com.sms.security.AuthUtils;
+import com.sms.security.auth.TokenManager;
 import com.sms.service.UserService;
 
 @RestController
@@ -23,7 +22,7 @@ import com.sms.service.UserService;
 public class UserController {
 	
 	@Autowired
-	private AuthUtils authUtils;
+	private TokenManager tokenManager;
 	
 	@Autowired
 	private UserService userService;
@@ -50,15 +49,11 @@ public class UserController {
 			User user = userService.validateCredentials(userEmail, userPassword);
 			
 			if(user != null) {
+				String token = tokenManager.generateToken(userEmail);
 				
 				data.put("form", "Login Successful!");
 				data.put("user", user);
-				
-				Calendar cal = Calendar.getInstance();
-				long nextDay = cal.getTimeInMillis() + 86400000;
-		        
-				String jwt = authUtils.createJWT(userEmail, nextDay);
-				data.put("jwt", jwt);
+				data.put("accessToken", token);
 				
 				status = HttpStatus.OK;
 			} else {
@@ -69,7 +64,6 @@ public class UserController {
 			data.put("form", "Validation Failed!");
 			status = HttpStatus.UNAUTHORIZED;
 		}
-		
 	
 		ResponseEntity<Map> responseEntity = new ResponseEntity<Map>(data, status);
 		

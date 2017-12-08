@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sms.domain.Pincode;
-import com.sms.repository.PincodeRepository;
+import com.sms.repo.PincodeRepository;
 import com.sms.service.PincodeService;
 
 @Service

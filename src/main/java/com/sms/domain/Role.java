@@ -1,16 +1,14 @@
 package com.sms.domain;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sms.domain.converter.PermissionListConverter;
+import com.sms.security.permission.Permission;
 
 @Entity
 public class Role {
@@ -21,7 +19,8 @@ public class Role {
 	private String roleName;
 	
 	@Column
-	private String rolePermissions;
+	@Convert(converter = PermissionListConverter.class)
+	private List<Permission> rolePermissions;
 
 	public Long getRoleId() {
 		return roleId;
@@ -39,19 +38,11 @@ public class Role {
 		this.roleName = roleName;
 	}
 
-	public List<Integer> getRolePermissions() throws JsonParseException, JsonMappingException, IOException {
-		return new ObjectMapper().readValue(rolePermissions, List.class);
-	}
-	
-	public void addRolePermission(Integer rolePermission) throws JsonParseException, JsonMappingException, IOException {
-		List<Integer> rolePermissions = getRolePermissions();
-		
-		rolePermissions.add(rolePermission);
-		
-		setRolePermissions(rolePermissions);
+	public List<Permission> getRolePermissions() {
+		return rolePermissions;
 	}
 
-	public void setRolePermissions(List<Integer> rolePermissions) throws JsonProcessingException {
-		this.rolePermissions = new ObjectMapper().writeValueAsString(rolePermissions);
+	public void setRolePermissions(List<Permission> rolePermissions) {
+		this.rolePermissions = rolePermissions;
 	}
 }

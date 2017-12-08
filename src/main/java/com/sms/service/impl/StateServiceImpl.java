@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sms.domain.State;
-import com.sms.repository.StateRepository;
+import com.sms.repo.StateRepository;
 import com.sms.service.StateService;
 
 @Service

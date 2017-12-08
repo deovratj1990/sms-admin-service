@@ -1,4 +1,4 @@
-package com.sms.repository;
+package com.sms.repo;
 
 import java.util.List;
 

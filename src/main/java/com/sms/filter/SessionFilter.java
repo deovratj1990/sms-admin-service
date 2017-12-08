@@ -13,37 +13,34 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.sms.security.AuthUtils;
+import com.sms.security.auth.RequestAuthorizer;
 
 @Component
 public class SessionFilter implements Filter {
 
 	@Autowired
-	private AuthUtils authUtils; 
+	private RequestAuthorizer requestAuthorizer;
 	
-	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-			throws IOException, ServletException {
-		
-		String authType = ((HttpServletRequest)req).getAuthType();
-		String authHeader = ((HttpServletRequest)req).getHeader("Authorization");
-		System.out.println("SessionFilter.doFilter authType:  " + authType);
-		System.out.println("SessionFilter.doFilter authHeader:  " + authHeader);
-		
-		if(null != authHeader) {
-			String jwt = authHeader.replace(authType + " ", "");
-			boolean isJwtValid = authUtils.parseJWT(jwt); //to-do after this
-			System.out.println("SessionFilter.doFilter isJwtValid: " + isJwtValid);
-		}
-			
-		
-		chain.doFilter(req, res);
-	}
-
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		
+		boolean isJwtValid = requestAuthorizer.authorize(httpRequest);
+		
+		System.out.println("SessionFilter.doFilter tokenType: " + requestAuthorizer.getTokenType());
+		System.out.println("SessionFilter.doFilter token: " + requestAuthorizer.getToken());
+		System.out.println("SessionFilter.doFilter tokenText: " + requestAuthorizer.getTokenText());
+		System.out.println("SessionFilter.doFilter isJwtValid: " + isJwtValid);
+		
+		httpRequest.setAttribute("userEmail", requestAuthorizer.getTokenText());
+		
+		chain.doFilter(request, response);
 	}
     
 	@Override

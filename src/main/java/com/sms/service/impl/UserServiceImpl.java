@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sms.domain.User;
-import com.sms.repository.UserRepository;
+import com.sms.repo.UserRepository;
 import com.sms.service.UserService;
 
 @Service
