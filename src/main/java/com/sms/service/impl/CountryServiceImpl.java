@@ -16,7 +16,7 @@ public class CountryServiceImpl implements CountryService {
 	CountryRepository countryRepository;
 	
 	public List<Country> getAll() {
-		List<Country> list = (List<Country>) countryRepository.findAll();
+		List<Country> list = (List<Country>) countryRepository.findAllByOrderByCountryNameAsc();
 		return list;
 	}
 
@@ -30,12 +30,12 @@ public class CountryServiceImpl implements CountryService {
 	}
 
 	public Country getByCountryId(Long countryId) {
-		return countryRepository.findCountryByCountryId(countryId);
+		return countryRepository.findOne(countryId);
 	}
 
 	public Country edit(Country country) {
 		
-		Country existingCountry = countryRepository.findCountryByCountryId(country.getCountryId());
+		Country existingCountry = countryRepository.findOne(country.getCountryId());
 		
 		if(null != existingCountry) {
 			Country foundCountry = countryRepository.findByCountryName(country.getCountryName());
@@ -45,7 +45,7 @@ public class CountryServiceImpl implements CountryService {
 				return countryRepository.save(existingCountry);
 			}	
 		}
-	
+		
 		return null;
 	}
 }

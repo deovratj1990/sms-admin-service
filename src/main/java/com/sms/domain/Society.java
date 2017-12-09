@@ -12,16 +12,19 @@ public class Society {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
-	private Integer societyId;
+	private Long societyId;
 	
 	@Column
 	private String societyName;
+	
+	@Column
+	private Long localityId;
 
-	public Integer getSocietyId() {
+	public Long getSocietyId() {
 		return societyId;
 	}
 
-	public void setSocietyId(Integer societyId) {
+	public void setSocietyId(Long societyId) {
 		this.societyId = societyId;
 	}
 
@@ -31,6 +34,14 @@ public class Society {
 
 	public void setSocietyName(String societyName) {
 		this.societyName = societyName;
+	}
+
+	public Long getLocalityId() {
+		return localityId;
+	}
+
+	public void setLocalityId(Long localityId) {
+		this.localityId = localityId;
 	}
 	
 }

@@ -23,7 +23,7 @@ public class LocalityServiceImpl implements LocalityService {
 
 	public List<Locality> getByPincodeId(Long localityId) {
 		
-		return localityRepository.findLocalityByPincodeId(localityId);
+		return localityRepository.findLocalityByPincodeIdOrderByLocalityNameAsc(localityId);
 	
 	}
 }

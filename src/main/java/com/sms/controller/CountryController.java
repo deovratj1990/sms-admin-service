@@ -23,31 +23,30 @@ public class CountryController {
 	CountryService countryService;
 	
 	@RequestMapping(path = "/add", method=RequestMethod.PUT)
-	public ResponseEntity<Country> add(@RequestParam String countryName) {
+	public ResponseEntity<String> add(@RequestParam String countryName) {
 		
 		Country country = new Country();
-		country.setCountryName(countryName);
-		Country savedCountry = countryService.add(country);
 		
-		if(null == savedCountry) {
-			return new ResponseEntity<Country>(HttpStatus.NO_CONTENT);
+		country.setCountryName(countryName);
+		
+		if(null != countryService.add(country)) {
+			return new ResponseEntity<String>(HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<Country>(savedCountry, HttpStatus.OK);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@RequestMapping(value="/edit", method=RequestMethod.PUT)
-	public ResponseEntity<Country> edit(@RequestParam Long countryId , @RequestParam String countryName){
+	public ResponseEntity<String> edit(@RequestParam Long countryId , @RequestParam String countryName){
 		Country country = new Country();
+		
 		country.setCountryId(countryId);
 		country.setCountryName(countryName);
 		
-		Country editCountry = countryService.edit(country);
-		
-		if(null == editCountry) {
-			return new ResponseEntity<Country>(HttpStatus.NO_CONTENT);
-		}else {
-			return new ResponseEntity<Country>(country, HttpStatus.OK);
+		if(null != countryService.edit(country)) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 	}
@@ -57,15 +56,23 @@ public class CountryController {
 
 		Country country = countryService.getByCountryId(countryId);
 		
-		return new ResponseEntity<Country>(country, HttpStatus.OK);
+		if(country != null) {
+			return new ResponseEntity<Country>(country, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Country>(HttpStatus.NO_CONTENT);
+		}
 	}
-		
+	
 	@RequestMapping(path="/getAll", method=RequestMethod.GET)
 	public ResponseEntity<List<Country>> getAll() {
 		
-		List<Country> countries = countryService.getAll();
+		List<Country> countryList = countryService.getAll();
 		
-		return new ResponseEntity<List<Country>>(countries, HttpStatus.OK);
+		if(countryList.size() != 0) {
+			return new ResponseEntity<List<Country>>(countryList, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<Country>>(HttpStatus.NO_CONTENT);
+		}
 	}
 
 }

@@ -8,6 +8,6 @@ import com.sms.domain.Locality;
 
 public interface LocalityRepository extends CrudRepository<Locality, Long> {
 	
-	public List<Locality> findLocalityByPincodeId(Long id);
+	public List<Locality> findLocalityByPincodeIdOrderByLocalityNameAsc(Long id);
 
 }

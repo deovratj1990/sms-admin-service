@@ -26,20 +26,27 @@ public class CityController {
 	public ResponseEntity<String> add(@RequestParam Long cityId, @RequestParam String cityName, @RequestParam Long stateId ) {
 		
 		City city = new City();
+		
 		city.setCityId(cityId);
 		city.setCityName(cityName);
 		city.setStateId(stateId);
 		
-		cityService.add(city);
-		
-		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		if(cityService.add(city) != null) {
+			return new ResponseEntity<String>(HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@RequestMapping(path = "/getByStateId", method=RequestMethod.GET)
 	public ResponseEntity<List<City>> getByStateId(@RequestParam Long stateId) {
 		List<City> cityList = cityService.getByStateId(stateId);
-		return new ResponseEntity<List<City>>(cityList, HttpStatus.OK);
 		
+		if(cityList.size() != 0) {
+			return new ResponseEntity<List<City>>(cityList, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<City>>(HttpStatus.NO_CONTENT);
+		}
 	}
 	
 }

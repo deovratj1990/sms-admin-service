@@ -25,14 +25,17 @@ public class PincodeController {
 	@RequestMapping(path = "/add", method=RequestMethod.PUT)
 	public ResponseEntity<String> add(@RequestParam Long pincodeId, @RequestParam String pincodeName, @RequestParam Long cityId) {
 				
-		Pincode pincode = new Pincode();		
+		Pincode pincode = new Pincode();
+		
 		pincode.setPincodeId(pincodeId);
 		pincode.setPincodeName(pincodeName);
 		pincode.setCityId(cityId);
 		
-		pincodeService.add(pincode);
-		
-		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		if(pincodeService.add(pincode) != null) {
+			return new ResponseEntity<String>(HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		
 	}
 	
@@ -40,7 +43,12 @@ public class PincodeController {
 	public ResponseEntity<List<Pincode>> getByCityId(@RequestParam Long cityId) {
 		
 		List<Pincode> pincodeList = pincodeService.getByCityId(cityId);
-		return new ResponseEntity<List<Pincode>>(pincodeList, HttpStatus.OK);
+		
+		if(pincodeList.size() != 0) {
+			return new ResponseEntity<List<Pincode>>(pincodeList, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<Pincode>>(HttpStatus.NO_CONTENT);
+		}
 		
 	}
 	

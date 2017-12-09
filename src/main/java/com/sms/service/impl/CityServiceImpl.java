@@ -20,6 +20,6 @@ public class CityServiceImpl implements CityService {
 	}
 
 	public List<City> getByStateId(Long stateId) {
-		return cityRepository.findCityByStateId(stateId);		
+		return cityRepository.findCityByStateIdOrderByCityNameAsc(stateId);		
 	}
 }

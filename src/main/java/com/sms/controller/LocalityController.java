@@ -26,14 +26,16 @@ public class LocalityController {
 	public ResponseEntity<String> add(@RequestParam Long localityId, @RequestParam String localityName, @RequestParam Long pincodeId) {
 		
 		Locality locality = new Locality();
+		
 		locality.setLocalityId(localityId);
 		locality.setLocalityName(localityName);
 		locality.setPincodeId(pincodeId);
 		
-		localityService.add(locality);
-		
-		return new ResponseEntity<String>(HttpStatus.OK);
-		
+		if(localityService.add(locality) != null) {
+			return new ResponseEntity<String>(HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@RequestMapping(path = "/getByPincodeId", method=RequestMethod.GET)
@@ -41,7 +43,11 @@ public class LocalityController {
 		
 		List<Locality> localityList = localityService.getByPincodeId(pincodeId);
 		
-		return new ResponseEntity<List<Locality>>(localityList, HttpStatus.OK);
+		if(localityList.size() != 0) {
+			return new ResponseEntity<List<Locality>>(localityList, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<Locality>>(HttpStatus.NO_CONTENT);
+		}
 		
 	}
 

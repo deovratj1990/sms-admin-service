@@ -8,6 +8,6 @@ import com.sms.domain.Pincode;
 
 public interface PincodeRepository extends CrudRepository<Pincode, Long>{
 	
-	public List<Pincode> findPincodeByCityId(Long id);
+	public List<Pincode> findPincodeByCityIdOrderByPincodeNameAsc(Long id);
 	
 }

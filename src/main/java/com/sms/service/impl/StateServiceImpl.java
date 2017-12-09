@@ -19,10 +19,10 @@ public class StateServiceImpl implements StateService {
 	private StateRepository stateRepository; 
 	
 	public List<State> getByCountryId(Long countryId) {
-		return stateRepository.findByCountryId(countryId);
+		return stateRepository.findByCountryIdOrderByStateNameAsc(countryId);
 	}
 
-	public State add(State state) {
+	public State save(State state) {
 		return stateRepository.save(state);
 	}
 

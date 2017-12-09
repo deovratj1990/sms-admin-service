@@ -9,7 +9,7 @@ public interface StateService {
 	
 	public List<Map<String, String>> getAll();
 	public List<State> getByCountryId(Long countryId);
-	public State add(State state);
+	public State save(State state);
 	public State getByStateId(Long stateId);
 	
 }

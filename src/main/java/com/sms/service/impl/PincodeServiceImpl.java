@@ -22,7 +22,7 @@ public class PincodeServiceImpl implements PincodeService {
 
 	public List<Pincode> getByCityId(Long cityId) {
 
-		return pincodeRepository.findPincodeByCityId(cityId);
+		return pincodeRepository.findPincodeByCityIdOrderByPincodeNameAsc(cityId);
 
 	}
 
