@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.sms.domain.Society;
 import com.sms.request.body.SocietyRegister;
 import com.sms.service.SocietyService;
 
@@ -108,11 +109,22 @@ public class SocietyController {
 		}
 		
 		if(messages.size() == 0) {
-			if(societyService.search(societyName, localityId) != null) {
+			if(societyService.search(societyName, localityId) == null) {
+				Society society = new Society();
+				
+				society.setSocietyName(societyName);
+				society.setLocalityId(localityId);
+				
+				boolean registered = societyService.register(society);
+				
+				if(registered) {
+					return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
+				} else {
+					return new ResponseEntity<Map>(HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+			} else {
 				return new ResponseEntity<Map>(HttpStatus.CONFLICT);
 			}
-			
-			return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<Map>(messages, HttpStatus.BAD_REQUEST);
 		}
