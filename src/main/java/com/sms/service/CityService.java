@@ -8,6 +8,6 @@ public interface CityService {
 	
 	public City add(City city);
 	
-	public List<City> getByStateId(Long stateId);
+	public List<City> getByStateId(Integer stateId);
 
 }

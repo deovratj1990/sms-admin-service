@@ -18,7 +18,7 @@ public class StateServiceImpl implements StateService {
 	@Autowired
 	private StateRepository stateRepository; 
 	
-	public List<State> getByCountryId(Long countryId) {
+	public List<State> getByCountryId(Integer countryId) {
 		return stateRepository.findByCountryIdOrderByStateNameAsc(countryId);
 	}
 
@@ -42,7 +42,7 @@ public class StateServiceImpl implements StateService {
 		return states;
 	}
 
-	public State getByStateId(Long stateId) {
+	public State getByStateId(Integer stateId) {
 		return stateRepository.findOne(stateId);
 	}
 	

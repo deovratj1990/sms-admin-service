@@ -6,8 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.sms.domain.City;
 
-public interface CityRepository extends CrudRepository<City, Long>{
+public interface CityRepository extends CrudRepository<City, Integer>{
 	
-	public List<City> findCityByStateIdOrderByCityNameAsc(Long id);
+	public List<City> findCityByStateIdOrderByCityNameAsc(Integer id);
 
 }

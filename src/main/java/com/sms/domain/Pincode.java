@@ -11,19 +11,19 @@ public class Pincode {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
-	private Long pincodeId;
+	private Integer pincodeId;
 	
 	@Column
 	private String pincodeName;
 
 	@Column
-	private Long cityId;
+	private Integer cityId;
 	
-	public Long getPincodeId() {
+	public Integer getPincodeId() {
 		return pincodeId;
 	}
 
-	public void setPincodeId(Long pincodeId) {
+	public void setPincodeId(Integer pincodeId) {
 		this.pincodeId = pincodeId;
 	}
 
@@ -35,11 +35,11 @@ public class Pincode {
 		this.pincodeName = pincodeName;
 	}
 
-	public Long getCityId() {
+	public Integer getCityId() {
 		return cityId;
 	}
 
-	public void setCityId(Long cityId) {
+	public void setCityId(Integer cityId) {
 		this.cityId = cityId;
 	}
 

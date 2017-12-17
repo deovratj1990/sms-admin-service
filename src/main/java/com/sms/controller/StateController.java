@@ -30,7 +30,7 @@ public class StateController {
 		
 		State state = new State();
 		
-		long stateId = requestBody.getStateId();
+		int stateId = requestBody.getStateId();
 		
 		if(stateId != 0) {
 			state.setStateId(stateId);
@@ -60,7 +60,7 @@ public class StateController {
 	}
 	
 	@RequestMapping(path = "/getByCountryId", method=RequestMethod.GET)
-	public ResponseEntity<List<State>> getByCountryId(@RequestParam Long countryId) {
+	public ResponseEntity<List<State>> getByCountryId(@RequestParam Integer countryId) {
 		
 		List<State> stateList = stateService.getByCountryId(countryId);
 		
@@ -72,7 +72,7 @@ public class StateController {
 	}
 	
 	@RequestMapping(path="getByStateId", method=RequestMethod.GET)
-	public ResponseEntity<State> getByStateId(@RequestParam Long stateId) {
+	public ResponseEntity<State> getByStateId(@RequestParam Integer stateId) {
 		State state = stateService.getByStateId(stateId);
 		
 		if(state != null) {

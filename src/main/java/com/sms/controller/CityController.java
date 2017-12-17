@@ -23,7 +23,7 @@ public class CityController {
 	CityService cityService;
 	
 	@RequestMapping(path = "/add", method=RequestMethod.PUT)
-	public ResponseEntity<String> add(@RequestParam Long cityId, @RequestParam String cityName, @RequestParam Long stateId ) {
+	public ResponseEntity<String> add(@RequestParam Integer cityId, @RequestParam String cityName, @RequestParam Integer stateId ) {
 		
 		City city = new City();
 		
@@ -39,7 +39,7 @@ public class CityController {
 	}
 	
 	@RequestMapping(path = "/getByStateId", method=RequestMethod.GET)
-	public ResponseEntity<List<City>> getByStateId(@RequestParam Long stateId) {
+	public ResponseEntity<List<City>> getByStateId(@RequestParam Integer stateId) {
 		List<City> cityList = cityService.getByStateId(stateId);
 		
 		if(cityList.size() != 0) {

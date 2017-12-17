@@ -64,7 +64,7 @@ public class UserController {
 			data.put("form", "Validation Failed!");
 			status = HttpStatus.UNAUTHORIZED;
 		}
-	
+		
 		ResponseEntity<Map> responseEntity = new ResponseEntity<Map>(data, status);
 		
 		return responseEntity;

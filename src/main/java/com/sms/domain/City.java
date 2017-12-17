@@ -11,19 +11,19 @@ public class City {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
-	private Long cityId;
+	private Integer cityId;
 	
 	@Column
 	private String cityName;
 	
 	@Column
-	private Long stateId;
+	private Integer stateId;
 
-	public Long getCityId() {
+	public Integer getCityId() {
 		return cityId;
 	}
 
-	public void setCityId(Long cityId) {
+	public void setCityId(Integer cityId) {
 		this.cityId = cityId;
 	}
 
@@ -35,13 +35,12 @@ public class City {
 		this.cityName = cityName;
 	}
 
-	public Long getStateId() {
+	public Integer getStateId() {
 		return stateId;
 	}
 
-	public void setStateId(Long stateId) {
+	public void setStateId(Integer stateId) {
 		this.stateId = stateId;
 	}
 	
-
 }

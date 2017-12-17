@@ -18,7 +18,7 @@ public class SocietyServiceImpl implements SocietyService {
 	private SocietyDbRepository societyDbRepository;
 
 	@Override
-	public Society search(String societyName, Long localityId) {
+	public Society search(String societyName, Integer localityId) {
 		return societyRepository.findBySocietyNameAndLocalityId(societyName, localityId);
 	}
 

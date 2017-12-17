@@ -12,10 +12,10 @@ public class State {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
-	private Long stateId;
+	private Integer stateId;
 	
 	@Column
-	private Long countryId;
+	private Integer countryId;
 	
 	@Column
 	private String stateName;
@@ -28,19 +28,19 @@ public class State {
 		this.stateName = stateName;
 	}
 
-	public Long getStateId() {
+	public Integer getStateId() {
 		return stateId;
 	}
 
-	public void setStateId(Long stateId) {
+	public void setStateId(Integer stateId) {
 		this.stateId = stateId;
 	}
 
-	public Long getCountryId() {
+	public Integer getCountryId() {
 		return countryId;
 	}
 
-	public void setCountryId(Long countryId) {
+	public void setCountryId(Integer countryId) {
 		this.countryId = countryId;
 	}
 	

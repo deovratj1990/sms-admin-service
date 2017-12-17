@@ -20,7 +20,7 @@ public class PincodeServiceImpl implements PincodeService {
 		return pincodeRepository.save(pincode);
 	}
 
-	public List<Pincode> getByCityId(Long cityId) {
+	public List<Pincode> getByCityId(Integer cityId) {
 
 		return pincodeRepository.findPincodeByCityIdOrderByPincodeNameAsc(cityId);
 

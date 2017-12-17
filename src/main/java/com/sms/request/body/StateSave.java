@@ -1,25 +1,25 @@
 package com.sms.request.body;
 
 public class StateSave {
-	private long stateId;
+	private int stateId;
 	
-	private long countryId;
+	private int countryId;
 	
 	private String stateName;
 
-	public long getStateId() {
+	public int getStateId() {
 		return stateId;
 	}
 
-	public void setStateId(long stateId) {
+	public void setStateId(int stateId) {
 		this.stateId = stateId;
 	}
 
-	public long getCountryId() {
+	public int getCountryId() {
 		return countryId;
 	}
 
-	public void setCountryId(long countryId) {
+	public void setCountryId(int countryId) {
 		this.countryId = countryId;
 	}
 

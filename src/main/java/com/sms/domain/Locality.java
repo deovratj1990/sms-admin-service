@@ -11,19 +11,19 @@ public class Locality {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
-	private Long localityId;
+	private Integer localityId;
 	
 	@Column
 	private String localityName;
 	
 	@Column
-	private Long pincodeId;
+	private Integer pincodeId;
 
-	public Long getLocalityId() {
+	public Integer getLocalityId() {
 		return localityId;
 	}
 
-	public void setLocalityId(Long localityId) {
+	public void setLocalityId(Integer localityId) {
 		this.localityId = localityId;
 	}
 
@@ -35,11 +35,11 @@ public class Locality {
 		this.localityName = localityName;
 	}
 
-	public Long getPincodeId() {
+	public Integer getPincodeId() {
 		return pincodeId;
 	}
 
-	public void setPincodeId(Long pincodeId) {
+	public void setPincodeId(Integer pincodeId) {
 		this.pincodeId = pincodeId;
 	}
 	

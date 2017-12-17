@@ -8,6 +8,6 @@ public interface LocalityService {
 	
 	public Locality add(Locality locality);
 	
-	public List<Locality> getByPincodeId(Long localityId);
+	public List<Locality> getByPincodeId(Integer localityId);
 
 }

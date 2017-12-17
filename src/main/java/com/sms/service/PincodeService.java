@@ -8,6 +8,6 @@ public interface PincodeService {
 	
 	public Pincode add(Pincode pincode);
 	
-	public List<Pincode> getByCityId(Long cityId);
+	public List<Pincode> getByCityId(Integer cityId);
 
 }

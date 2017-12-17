@@ -23,7 +23,7 @@ public class PincodeController {
 	PincodeService pincodeService;
 	
 	@RequestMapping(path = "/add", method=RequestMethod.PUT)
-	public ResponseEntity<String> add(@RequestParam Long pincodeId, @RequestParam String pincodeName, @RequestParam Long cityId) {
+	public ResponseEntity<String> add(@RequestParam Integer pincodeId, @RequestParam String pincodeName, @RequestParam Integer cityId) {
 				
 		Pincode pincode = new Pincode();
 		
@@ -40,7 +40,7 @@ public class PincodeController {
 	}
 	
 	@RequestMapping(path = "/getByCityId", method=RequestMethod.GET)
-	public ResponseEntity<List<Pincode>> getByCityId(@RequestParam Long cityId) {
+	public ResponseEntity<List<Pincode>> getByCityId(@RequestParam Integer cityId) {
 		
 		List<Pincode> pincodeList = pincodeService.getByCityId(cityId);
 		

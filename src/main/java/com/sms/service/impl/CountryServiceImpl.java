@@ -29,7 +29,7 @@ public class CountryServiceImpl implements CountryService {
 		}
 	}
 
-	public Country getByCountryId(Long countryId) {
+	public Country getByCountryId(Integer countryId) {
 		return countryRepository.findOne(countryId);
 	}
 

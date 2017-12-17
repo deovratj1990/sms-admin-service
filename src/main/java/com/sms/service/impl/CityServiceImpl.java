@@ -19,7 +19,7 @@ public class CityServiceImpl implements CityService {
 		return cityRepository.save(city);
 	}
 
-	public List<City> getByStateId(Long stateId) {
+	public List<City> getByStateId(Integer stateId) {
 		return cityRepository.findCityByStateIdOrderByCityNameAsc(stateId);		
 	}
 }

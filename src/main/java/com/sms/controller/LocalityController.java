@@ -23,7 +23,7 @@ public class LocalityController {
 	LocalityService localityService;
 	
 	@RequestMapping(path = "/add", method=RequestMethod.PUT)
-	public ResponseEntity<String> add(@RequestParam Long localityId, @RequestParam String localityName, @RequestParam Long pincodeId) {
+	public ResponseEntity<String> add(@RequestParam Integer localityId, @RequestParam String localityName, @RequestParam Integer pincodeId) {
 		
 		Locality locality = new Locality();
 		
@@ -39,7 +39,7 @@ public class LocalityController {
 	}
 	
 	@RequestMapping(path = "/getByPincodeId", method=RequestMethod.GET)
-	public ResponseEntity<List<Locality>> getByPincodeId(@RequestParam Long pincodeId) {
+	public ResponseEntity<List<Locality>> getByPincodeId(@RequestParam Integer pincodeId) {
 		
 		List<Locality> localityList = localityService.getByPincodeId(pincodeId);
 		

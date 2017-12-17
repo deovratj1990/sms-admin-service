@@ -5,15 +5,15 @@ import java.util.List;
 public class SocietyRegister {
 	private String societyName;
 	
-	private long countryId;
+	private int countryId;
 	
-	private long stateId;
+	private int stateId;
 	
-	private long cityId;
+	private int cityId;
 	
-	private long pincodeId;
+	private int pincodeId;
 	
-	private long localityId;
+	private int localityId;
 	
 	private List<String> wingName;
 	
@@ -33,43 +33,43 @@ public class SocietyRegister {
 		this.societyName = societyName;
 	}
 
-	public long getCountryId() {
+	public int getCountryId() {
 		return countryId;
 	}
 
-	public void setCountryId(long countryId) {
+	public void setCountryId(int countryId) {
 		this.countryId = countryId;
 	}
 
-	public long getStateId() {
+	public int getStateId() {
 		return stateId;
 	}
 
-	public void setStateId(long stateId) {
+	public void setStateId(int stateId) {
 		this.stateId = stateId;
 	}
 
-	public long getCityId() {
+	public int getCityId() {
 		return cityId;
 	}
 
-	public void setCityId(long cityId) {
+	public void setCityId(int cityId) {
 		this.cityId = cityId;
 	}
 
-	public long getPincodeId() {
+	public int getPincodeId() {
 		return pincodeId;
 	}
 
-	public void setPincodeId(long pincodeId) {
+	public void setPincodeId(int pincodeId) {
 		this.pincodeId = pincodeId;
 	}
 
-	public long getLocalityId() {
+	public int getLocalityId() {
 		return localityId;
 	}
 
-	public void setLocalityId(long localityId) {
+	public void setLocalityId(int localityId) {
 		this.localityId = localityId;
 	}
 

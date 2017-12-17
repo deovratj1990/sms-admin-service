@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.sms.domain.Country;
 
-public interface CountryRepository extends CrudRepository<Country, Long>{
+public interface CountryRepository extends CrudRepository<Country, Integer>{
 	
 	public List<Country> findAllByOrderByCountryNameAsc();
 	

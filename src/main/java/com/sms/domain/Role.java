@@ -13,7 +13,7 @@ import com.sms.security.permission.Permission;
 @Entity
 public class Role {
 	@Id
-	private Long roleId;
+	private Integer roleId;
 	
 	@Column
 	private String roleName;
@@ -22,11 +22,11 @@ public class Role {
 	@Convert(converter = PermissionListConverter.class)
 	private List<Permission> rolePermissions;
 
-	public Long getRoleId() {
+	public Integer getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(Long roleId) {
+	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
 	}
 

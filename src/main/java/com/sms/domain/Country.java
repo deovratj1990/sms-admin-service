@@ -12,7 +12,7 @@ public class Country {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
-	private Long countryId;
+	private Integer countryId;
 	
 	@Column
 	private String countryName;
@@ -25,11 +25,11 @@ public class Country {
 		this.countryName = countryName;
 	}
 
-	public Long getCountryId() {
+	public Integer getCountryId() {
 		return countryId;
 	}
 
-	public void setCountryId(Long countryId) {
+	public void setCountryId(Integer countryId) {
 		this.countryId = countryId;
 	}
 	

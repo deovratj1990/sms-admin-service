@@ -37,7 +37,7 @@ public class CountryController {
 	}
 	
 	@RequestMapping(value="/edit", method=RequestMethod.PUT)
-	public ResponseEntity<String> edit(@RequestParam Long countryId , @RequestParam String countryName){
+	public ResponseEntity<String> edit(@RequestParam Integer countryId , @RequestParam String countryName){
 		Country country = new Country();
 		
 		country.setCountryId(countryId);
@@ -52,7 +52,7 @@ public class CountryController {
 	}
 	
 	@RequestMapping(value="/getByCountryId", method=RequestMethod.GET)
-	public ResponseEntity<Country> getByCountryId(@RequestParam Long countryId){
+	public ResponseEntity<Country> getByCountryId(@RequestParam Integer countryId){
 
 		Country country = countryService.getByCountryId(countryId);
 		

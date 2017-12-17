@@ -28,11 +28,11 @@ public class SocietyController {
 	@RequestMapping(path = "/register", method = RequestMethod.PUT, consumes = "application/json", produces="application/json")
 	public ResponseEntity<Map> register(@RequestBody SocietyRegister requestBody) {
 		String societyName = requestBody.getSocietyName();
-		long countryId = requestBody.getCountryId();
-		long stateId = requestBody.getStateId();
-		long cityId = requestBody.getCityId();
-		long pincodeId = requestBody.getPincodeId();
-		long localityId = requestBody.getLocalityId();
+		int countryId = requestBody.getCountryId();
+		int stateId = requestBody.getStateId();
+		int cityId = requestBody.getCityId();
+		int pincodeId = requestBody.getPincodeId();
+		int localityId = requestBody.getLocalityId();
 		List<String> wingNameList = requestBody.getWingName();
 		List<String> roomNameList = requestBody.getRoomName();
 		String secretaryWing = requestBody.getSecretaryWing();

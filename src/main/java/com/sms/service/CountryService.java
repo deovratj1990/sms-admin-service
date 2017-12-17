@@ -10,7 +10,7 @@ public interface CountryService {
 	
 	public Country add(Country country);
 	
-	public Country getByCountryId(Long countryId);
+	public Country getByCountryId(Integer countryId);
 	
 	public Country edit(Country country);
 	
