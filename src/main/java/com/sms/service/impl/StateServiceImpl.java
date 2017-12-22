@@ -1,9 +1,6 @@
 package com.sms.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,24 +23,12 @@ public class StateServiceImpl implements StateService {
 		return stateRepository.save(state);
 	}
 
-	public List<Map<String, String>> getAll() {
-		List<Map<String, String>> states = new ArrayList<Map<String, String>>();
-		
-		for(Object[] rowObject : stateRepository.getAll()) {
-			Map<String, String> row = new HashMap<String, String>();
-			
-			row.put("countryName", rowObject[0].toString());
-			row.put("stateId", rowObject[1].toString());
-			row.put("stateName", rowObject[2].toString());
-			
-			states.add(row);
-		}
-		
-		return states;
-	}
-
 	public State getByStateId(Integer stateId) {
 		return stateRepository.findOne(stateId);
+	}
+
+	public State getByStateName(String stateName) {
+		return stateRepository.findByStateName(stateName);
 	}
 	
 }

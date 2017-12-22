@@ -1,5 +1,6 @@
 package com.sms.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,41 +27,47 @@ public class StateController {
 	StateService stateService;
 	
 	@RequestMapping(path = "/save", method=RequestMethod.PUT, consumes = "application/json")
-	public ResponseEntity<State> save(@RequestBody StateSave requestBody) {
+	public ResponseEntity<Map> save(@RequestBody StateSave requestBody) {
 		
-		State state = new State();
+		State state = new State();		
+		Boolean validated = true;
+		Boolean stateEdit = false;
 		
-		int stateId = requestBody.getStateId();
+		Map response = new HashMap();
+		Map messages = new HashMap();
+		Map data = new HashMap();
 		
-		if(stateId != 0) {
-			state.setStateId(stateId);
+		response.put("messages", messages);
+		response.put("data", data);
+		
+		if(0 != requestBody.getStateId()) {
+			stateEdit = true;
+			state.setStateId(requestBody.getStateId());
 		}
-		
+
 		state.setCountryId(requestBody.getCountryId());
 		state.setStateName(requestBody.getStateName());
 		
-		state = stateService.save(state);
+		if(state.getStateName().equals("")) {
+			validated = false;
+			messages.put("stateName", "State cannot be blank!");
+		}
 		
-		if(null != state) {
-			return new ResponseEntity<State>(state, HttpStatus.CREATED);
+		if(!validated) {
+			return new ResponseEntity<Map>(response, HttpStatus.BAD_REQUEST);
 		} else {
-			return new ResponseEntity<State>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}		
-	}
-	
-	@RequestMapping(path="/getAll", method=RequestMethod.GET)
-	public ResponseEntity<List<Map<String, String>>> getAll() {
-		List<Map<String, String>> stateList = stateService.getAll();
-		
-		if(stateList.size() != 0) {
-			return new ResponseEntity<List<Map<String, String>>>(stateList, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<List<Map<String, String>>>(HttpStatus.NO_CONTENT);
+			if(null == stateService.getByStateName(state.getStateName())) {
+				state = stateService.save(state);
+				data.put("stateId", state.getStateId());
+				return new ResponseEntity<Map>(response, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Map>(response, HttpStatus.CONFLICT);
+			}
 		}
 	}
 	
 	@RequestMapping(path = "/getByCountryId", method=RequestMethod.GET)
-	public ResponseEntity<List<State>> getByCountryId(@RequestParam Integer countryId) {
+	public ResponseEntity<List<State>> getByCountryId(@RequestParam int countryId) {
 		
 		List<State> stateList = stateService.getByCountryId(countryId);
 		
@@ -72,7 +79,7 @@ public class StateController {
 	}
 	
 	@RequestMapping(path="getByStateId", method=RequestMethod.GET)
-	public ResponseEntity<State> getByStateId(@RequestParam Integer stateId) {
+	public ResponseEntity<State> getByStateId(@RequestParam int stateId) {
 		State state = stateService.getByStateId(stateId);
 		
 		if(state != null) {

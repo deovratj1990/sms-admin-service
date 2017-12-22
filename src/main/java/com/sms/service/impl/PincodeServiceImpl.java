@@ -15,7 +15,7 @@ public class PincodeServiceImpl implements PincodeService {
 	@Autowired
 	PincodeRepository pincodeRepository;
 	
-	public Pincode add(Pincode pincode) {
+	public Pincode save(Pincode pincode) {
 		
 		return pincodeRepository.save(pincode);
 	}
@@ -24,6 +24,16 @@ public class PincodeServiceImpl implements PincodeService {
 
 		return pincodeRepository.findPincodeByCityIdOrderByPincodeNameAsc(cityId);
 
+	}
+
+	@Override
+	public Pincode getByPincodeId(Integer pincodeId) {
+		return pincodeRepository.findOne(pincodeId);
+	}
+
+	@Override
+	public Pincode getByPincodeName(String pincodeName) {
+		return pincodeRepository.findByPincodeName(pincodeName);
 	}
 
 }

@@ -7,12 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sms.domain.User;
+import com.sms.request.body.UserLogin;
 import com.sms.security.auth.TokenManager;
 import com.sms.service.UserService;
 
@@ -29,11 +30,14 @@ public class UserController {
 	
 	@SuppressWarnings("deprecation")
 	@RequestMapping(method = RequestMethod.POST, path = "/login", produces = "application/json")
-	public ResponseEntity<Map> login(@RequestParam String userEmail, @RequestParam String userPassword) {
+	public ResponseEntity<Map> login(@RequestBody UserLogin requestBody) {
 		boolean validated = true;
 		
 		Map data = new HashMap();
 		HttpStatus status;
+		
+		String userEmail = requestBody.getUserEmail();
+		String userPassword = requestBody.getUserPassword();
 		
 		if(userEmail.equals("")) {
 			validated = false;
@@ -43,6 +47,7 @@ public class UserController {
 		if(userPassword.equals("")) {
 			validated = false;
 			data.put("userPassword", "Password Cannot Be Blank!");
+			
 		}
 		
 		if(validated) {
@@ -64,7 +69,7 @@ public class UserController {
 			data.put("form", "Validation Failed!");
 			status = HttpStatus.UNAUTHORIZED;
 		}
-		
+	
 		ResponseEntity<Map> responseEntity = new ResponseEntity<Map>(data, status);
 		
 		return responseEntity;

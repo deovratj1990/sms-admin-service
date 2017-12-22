@@ -15,15 +15,21 @@ public class LocalityServiceImpl implements LocalityService {
 	@Autowired
 	LocalityRepository localityRepository;
 	
-	public Locality add(Locality locality) {
-		
+	public Locality save(Locality locality) {
 		return localityRepository.save(locality);
-		
 	}
 
 	public List<Locality> getByPincodeId(Integer localityId) {
-		
 		return localityRepository.findLocalityByPincodeIdOrderByLocalityNameAsc(localityId);
+	}
 	
+	@Override
+	public Locality getByLocalityId(Integer localityId) {
+		return localityRepository.findOne(localityId);
+	}
+
+	@Override
+	public Locality getByLocalityName(String localityName) {
+		return localityRepository.findByLocalityName(localityName);
 	}
 }

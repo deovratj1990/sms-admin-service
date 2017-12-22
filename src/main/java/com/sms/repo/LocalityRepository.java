@@ -9,5 +9,7 @@ import com.sms.domain.Locality;
 public interface LocalityRepository extends CrudRepository<Locality, Integer> {
 	
 	public List<Locality> findLocalityByPincodeIdOrderByLocalityNameAsc(Integer id);
+	
+	public Locality findByLocalityName(String localityName);
 
 }

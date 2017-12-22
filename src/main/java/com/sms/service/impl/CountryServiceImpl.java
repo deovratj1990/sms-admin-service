@@ -20,32 +20,16 @@ public class CountryServiceImpl implements CountryService {
 		return list;
 	}
 
-	public Country add(Country country) {
-		if(null == countryRepository.findByCountryName(country.getCountryName())) {
-			Country savedCountry = countryRepository.save(country);
-			return savedCountry;
-		} else {
-			return null;
-		}
+	public Country save(Country country) {
+		return countryRepository.save(country);
 	}
 
 	public Country getByCountryId(Integer countryId) {
 		return countryRepository.findOne(countryId);
 	}
 
-	public Country edit(Country country) {
-		
-		Country existingCountry = countryRepository.findOne(country.getCountryId());
-		
-		if(null != existingCountry) {
-			Country foundCountry = countryRepository.findByCountryName(country.getCountryName());
-			
-			if(null == foundCountry) {
-				existingCountry.setCountryName(country.getCountryName());
-				return countryRepository.save(existingCountry);
-			}	
-		}
-		
-		return null;
+	@Override
+	public Country getByCountryName(String countryName) {
+		return countryRepository.findByCountryName(countryName);
 	}
 }

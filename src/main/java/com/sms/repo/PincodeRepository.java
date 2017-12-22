@@ -10,4 +10,6 @@ public interface PincodeRepository extends CrudRepository<Pincode, Integer>{
 	
 	public List<Pincode> findPincodeByCityIdOrderByPincodeNameAsc(Integer id);
 	
+	public Pincode findByPincodeName(String pincodeName);
+	
 }

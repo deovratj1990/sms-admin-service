@@ -1,17 +1,21 @@
 package com.sms.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sms.domain.Country;
+import com.sms.request.body.CountrySave;
 import com.sms.service.CountryService;
 
 @RestController
@@ -22,37 +26,47 @@ public class CountryController {
 	@Autowired
 	CountryService countryService;
 	
-	@RequestMapping(path = "/add", method=RequestMethod.PUT)
-	public ResponseEntity<String> add(@RequestParam String countryName) {
+	@RequestMapping(path = "/save", method=RequestMethod.PUT)
+	public ResponseEntity<Map> save(@RequestBody CountrySave requestBody) {
+		
+		Boolean validated = true;
+		
+		Map response = new HashMap();
+		Map messages = new HashMap();
+		Map data = new HashMap();
+		
+		response.put("messages", messages);
+		response.put("data", data);
 		
 		Country country = new Country();
-		
-		country.setCountryName(countryName);
-		
-		if(null != countryService.add(country)) {
-			return new ResponseEntity<String>(HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	
-	@RequestMapping(value="/edit", method=RequestMethod.PUT)
-	public ResponseEntity<String> edit(@RequestParam Integer countryId , @RequestParam String countryName){
-		Country country = new Country();
-		
-		country.setCountryId(countryId);
-		country.setCountryName(countryName);
-		
-		if(null != countryService.edit(country)) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		} else {
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		Boolean countryEdit = false; 
+		if(requestBody.getCountryId() != 0) {
+			countryEdit = true;
+			country.setCountryId(requestBody.getCountryId());
 		}
 		
+		country.setCountryName(requestBody.getCountryName());
+		
+		if(country.getCountryName().equals("")) {
+			validated = false;
+			messages.put("countryName", "Country cannot be blank!");
+		}
+		
+		if(!validated) {
+			return new ResponseEntity<Map>(response, HttpStatus.BAD_REQUEST);
+		} else {
+			if(countryService.getByCountryName(country.getCountryName()) == null) {
+				country = countryService.save(country);
+				data.put("countryId", country.getCountryId());
+				return new ResponseEntity<Map>(response, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Map>(HttpStatus.CONFLICT);
+			}
+		}
 	}
 	
 	@RequestMapping(value="/getByCountryId", method=RequestMethod.GET)
-	public ResponseEntity<Country> getByCountryId(@RequestParam Integer countryId){
+	public ResponseEntity<Country> getByCountryId(@RequestParam int countryId){
 
 		Country country = countryService.getByCountryId(countryId);
 		

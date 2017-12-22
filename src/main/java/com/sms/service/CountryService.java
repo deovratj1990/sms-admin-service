@@ -8,10 +8,10 @@ public interface CountryService {
 	
 	public List<Country> getAll();
 	
-	public Country add(Country country);
+	public Country save(Country country);
+
+	public Country getByCountryName(String countryName);
 	
 	public Country getByCountryId(Integer countryId);
-	
-	public Country edit(Country country);
 	
 }
