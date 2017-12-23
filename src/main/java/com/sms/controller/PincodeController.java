@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sms.domain.City;
 import com.sms.domain.Pincode;
 import com.sms.request.body.PincodeSave;
 import com.sms.service.PincodeService;
@@ -46,7 +45,7 @@ public class PincodeController {
 			pincode.setPincodeId(requestBody.getPincodeId());
 		}
 
-		pincode.setCityId(requestBody.getCityId());
+		pincode.setAreaId(requestBody.getAreaId());
 		pincode.setPincodeName(requestBody.getPincodeName());
 		
 		if(pincode.getPincodeName().equals("")) {
@@ -67,10 +66,10 @@ public class PincodeController {
 		}
 	}
 	
-	@RequestMapping(path = "/getByCityId", method=RequestMethod.GET)
-	public ResponseEntity<List<Pincode>> getByCityId(@RequestParam int cityId) {
+	@RequestMapping(path = "/getByAreaId", method=RequestMethod.GET)
+	public ResponseEntity<List<Pincode>> getByAreaId(@RequestParam int areaId) {
 		
-		List<Pincode> pincodeList = pincodeService.getByCityId(cityId);
+		List<Pincode> pincodeList = pincodeService.getByAreaId(areaId);
 		
 		if(pincodeList.size() != 0) {
 			return new ResponseEntity<List<Pincode>>(pincodeList, HttpStatus.OK);

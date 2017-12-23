@@ -11,6 +11,8 @@ public class SocietyRegister {
 	
 	private int cityId;
 	
+	private int areaId;
+	
 	private int pincodeId;
 	
 	private int localityId;
@@ -55,6 +57,14 @@ public class SocietyRegister {
 
 	public void setCityId(int cityId) {
 		this.cityId = cityId;
+	}
+
+	public int getAreaId() {
+		return areaId;
+	}
+
+	public void setAreaId(int areaId) {
+		this.areaId = areaId;
 	}
 
 	public int getPincodeId() {

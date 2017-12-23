@@ -17,7 +17,7 @@ public class Pincode {
 	private String pincodeName;
 
 	@Column
-	private Integer cityId;
+	private Integer areaId;
 	
 	public Integer getPincodeId() {
 		return pincodeId;
@@ -35,12 +35,12 @@ public class Pincode {
 		this.pincodeName = pincodeName;
 	}
 
-	public Integer getCityId() {
-		return cityId;
+	public Integer getAreaId() {
+		return areaId;
 	}
 
-	public void setCityId(Integer cityId) {
-		this.cityId = cityId;
+	public void setAreaId(Integer areaId) {
+		this.areaId = areaId;
 	}
 
 }
