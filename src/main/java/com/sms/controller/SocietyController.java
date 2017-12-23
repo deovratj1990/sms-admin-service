@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.sms.domain.Society;
 import com.sms.request.body.SocietyRegister;
 import com.sms.service.SocietyService;
 
@@ -30,6 +31,7 @@ public class SocietyController {
 		int countryId = requestBody.getCountryId();
 		int stateId = requestBody.getStateId();
 		int cityId = requestBody.getCityId();
+		int areaId = requestBody.getAreaId();
 		int pincodeId = requestBody.getPincodeId();
 		int localityId = requestBody.getLocalityId();
 		List<String> wingNameList = requestBody.getWingName();
@@ -54,6 +56,10 @@ public class SocietyController {
 		
 		if(cityId == 0) {
 			messages.put("cityId", "City is manadatory");
+		}
+		
+		if(areaId == 0) {
+			messages.put("areaId", "Area is manadatory");
 		}
 		
 		if(pincodeId == 0) {
@@ -108,13 +114,22 @@ public class SocietyController {
 		}
 		
 		if(messages.size() == 0) {
-			if(societyService.search(societyName, localityId) != null) {
-				return new ResponseEntity<Map>(HttpStatus.CONFLICT);
-			} else {
+			Society society = new Society();
+			
+			society.setSocietyName(societyName);
+			society.setLocalityId(localityId);
+			
+			int created = societyService.register(society);
+			
+			if(created == 1) {
 				return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
+			} else if(created == -1) {
+				return new ResponseEntity<Map>(HttpStatus.CONFLICT);
 			}
-		} else {
-			return new ResponseEntity<Map>(messages, HttpStatus.BAD_REQUEST);
+			
+			return new ResponseEntity<Map>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		
+		return new ResponseEntity<Map>(messages, HttpStatus.BAD_REQUEST);
 	}
 }

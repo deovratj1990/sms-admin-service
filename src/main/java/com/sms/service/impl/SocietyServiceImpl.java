@@ -1,5 +1,7 @@
 package com.sms.service.impl;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +16,32 @@ public class SocietyServiceImpl implements SocietyService {
 	private SocietyRepository societyRepository;
 
 	@Override
-	public Society search(String societyName, Integer localityId) {
-		return societyRepository.findBySocietyNameAndLocalityId(societyName, localityId);
+	public Society search(Society society) {
+		return societyRepository.findBySocietyNameAndLocalityId(society.getSocietyName(), society.getLocalityId());
 	}
 
 	@Override
-	public boolean register(Society society) {
-		// TODO Auto-generated method stub
-		return false;
+	@Transactional
+	public int register(Society society) {
+		try {
+			if(search(society) == null) {
+				society = societyRepository.save(society);
+				
+				String societyDbName = "society" + society.getSocietyId();
+				
+				societyRepository.createDb(societyDbName);
+				
+				societyRepository.createDbTables(societyDbName);
+				
+				return 1;
+			} else {
+				return -1;
+			}
+		} catch(Exception ex) {
+			ex.printStackTrace();
+			
+			return 0;
+		}
 	}
 	
 }
