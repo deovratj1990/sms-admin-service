@@ -2,18 +2,18 @@ package com.sms.request.body;
 
 public class PincodeSave {
 	
-	private int cityId;
+	private int areaId;
 	
 	private int pincodeId;
 	
 	private String pincodeName;
 
-	public int getCityId() {
-		return cityId;
+	public int getAreaId() {
+		return areaId;
 	}
 
-	public void setCityId(int cityId) {
-		this.cityId = cityId;
+	public void setAreaId(int areaId) {
+		this.areaId = areaId;
 	}
 
 	public int getPincodeId() {
