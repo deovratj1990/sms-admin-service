@@ -157,8 +157,18 @@ public class SocietyController {
 		return new ResponseEntity<Map>(response, HttpStatus.BAD_REQUEST);
 	}
 	
-	@RequestMapping(path = "/getAll", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map> getAll() {
-		return null;
+	@RequestMapping(path = "/getAllSocietySubscription", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map> getAllSocietySubscription() {
+		List<Map> societySubscriptionList = societyService.getAllSocietySubscription();
+		
+		Map response = new HashMap();
+		
+		response.put("societySubscriptionList", societySubscriptionList);
+		
+		if(societySubscriptionList.size() != 0) {
+			return new ResponseEntity<Map>(response, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
+		}
 	}
 }

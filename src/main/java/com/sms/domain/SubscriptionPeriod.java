@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class SubscriptionPeriod {
@@ -25,7 +27,7 @@ public class SubscriptionPeriod {
 	private Integer subscriptionPeriodId;
 	
 	@Column
-	private Integer scocietyId;
+	private Integer societyId;
 	
 	@Column
 	private Integer subscriptionPeriodType;
@@ -34,9 +36,11 @@ public class SubscriptionPeriod {
 	private Integer subscriptionPeriodDuration;
 	
 	@Column
+	@Temporal(TemporalType.DATE)
 	private Date subscriptionPeriodStartDate;
 	
 	@Column
+	@Temporal(TemporalType.DATE)
 	private Date subscriptionPeriodEndDate;
 	
 	@Column
@@ -59,12 +63,12 @@ public class SubscriptionPeriod {
 		this.subscriptionPeriodId = subscriptionPeriodId;
 	}
 
-	public Integer getScocietyId() {
-		return scocietyId;
+	public Integer getSocietyId() {
+		return societyId;
 	}
 
-	public void setScocietyId(Integer scocietyId) {
-		this.scocietyId = scocietyId;
+	public void setSocietyId(Integer societyId) {
+		this.societyId = societyId;
 	}
 
 	public Integer getSubscriptionPeriodType() {

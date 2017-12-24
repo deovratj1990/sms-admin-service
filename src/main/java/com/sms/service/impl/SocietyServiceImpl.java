@@ -1,7 +1,10 @@
 package com.sms.service.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -55,7 +58,7 @@ public class SocietyServiceImpl implements SocietyService {
 				
 				User user = (User) extraData.get("user");
 				
-				subscriptionPeriod.setScocietyId(society.getSocietyId());
+				subscriptionPeriod.setSocietyId(society.getSocietyId());
 				subscriptionPeriod.setSubscriptionPeriodType(subscriptionPeriodType);
 				subscriptionPeriod.setSubscriptionPeriodDuration(subscriptionPeriodDuration);
 				subscriptionPeriod.setSubscriptionPeriodStartDate(startDate);
@@ -81,6 +84,29 @@ public class SocietyServiceImpl implements SocietyService {
 			
 			return 0;
 		}
+	}
+
+	@Override
+	public List<Map> getAllSocietySubscription() {
+		List<Object[]> societySubscriptionListObject = societyRepository.getAllSocietySubscription();
+		List<Map> societySubscriptionList = new ArrayList<Map>();
+		
+		if(societySubscriptionListObject != null) {
+			for(int index = 0; index < societySubscriptionListObject.size(); index++) {
+				Map societySubscription = new HashMap();
+				
+				societySubscription.put("societyName", societySubscriptionListObject.get(index)[0]);
+				societySubscription.put("localityName", societySubscriptionListObject.get(index)[1]);
+				societySubscription.put("pincodeName", societySubscriptionListObject.get(index)[2]);
+				societySubscription.put("subscriptionPeriodEndDate", societySubscriptionListObject.get(index)[3]);
+				societySubscription.put("subscriptionPeriodType", societySubscriptionListObject.get(index)[4]);
+				societySubscription.put("subscriptionPeriodStatus", societySubscriptionListObject.get(index)[5]);
+				
+				societySubscriptionList.add(societySubscription);
+			}
+		}
+		
+		return societySubscriptionList;
 	}
 	
 }
