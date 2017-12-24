@@ -10,7 +10,6 @@ import javax.persistence.Id;
 public class Pincode {	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column
 	private Integer pincodeId;
 	
 	@Column

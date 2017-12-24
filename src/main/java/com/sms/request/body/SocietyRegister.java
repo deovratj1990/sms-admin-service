@@ -26,6 +26,10 @@ public class SocietyRegister {
 	private String secretaryRoom;
 	
 	private String secretaryMobile;
+	
+	private int subscriptionPeriodType;
+	
+	private int subscriptionPeriodDuration;
 
 	public String getSocietyName() {
 		return societyName;
@@ -121,5 +125,21 @@ public class SocietyRegister {
 
 	public void setSecretaryMobile(String secretaryMobile) {
 		this.secretaryMobile = secretaryMobile;
+	}
+
+	public int getSubscriptionPeriodType() {
+		return subscriptionPeriodType;
+	}
+
+	public void setSubscriptionPeriodType(int subscriptionPeriodType) {
+		this.subscriptionPeriodType = subscriptionPeriodType;
+	}
+
+	public int getSubscriptionPeriodDuration() {
+		return subscriptionPeriodDuration;
+	}
+
+	public void setSubscriptionPeriodDuration(int subscriptionPeriodDuration) {
+		this.subscriptionPeriodDuration = subscriptionPeriodDuration;
 	}
 }

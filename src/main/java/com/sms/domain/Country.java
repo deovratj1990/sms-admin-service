@@ -11,7 +11,6 @@ public class Country {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column
 	private Integer countryId;
 	
 	@Column

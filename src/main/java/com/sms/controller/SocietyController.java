@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,7 @@ public class SocietyController {
 	private SocietyService societyService;
 	
 	@RequestMapping(path = "/register", method = RequestMethod.PUT, consumes = "application/json", produces="application/json")
-	public ResponseEntity<Map> register(@RequestBody SocietyRegister requestBody) {
+	public ResponseEntity<Map> register(HttpServletRequest request, @RequestBody SocietyRegister requestBody) {
 		String societyName = requestBody.getSocietyName();
 		int countryId = requestBody.getCountryId();
 		int stateId = requestBody.getStateId();
@@ -39,8 +41,16 @@ public class SocietyController {
 		String secretaryWing = requestBody.getSecretaryWing();
 		String secretaryRoom = requestBody.getSecretaryRoom();
 		String secretaryMobile = requestBody.getSecretaryMobile();
+		int subscriptionPeriodType = requestBody.getSubscriptionPeriodType();
+		int subscriptionPeriodDuration = requestBody.getSubscriptionPeriodDuration();
 		
 		Map messages = new HashMap();
+		Map data = new HashMap();
+		
+		Map response = new HashMap();
+		
+		response.put("messages", messages);
+		response.put("data", data);
 		
 		if(societyName == null || societyName.trim().length() == 0) {
 			messages.put("societyName", "Society Name is manadatory");
@@ -113,13 +123,27 @@ public class SocietyController {
 			messages.put("secretaryMobile", "Secretary mobile is not valid");
 		}
 		
+		if(subscriptionPeriodType == 0) {
+			messages.put("subscriptionPeriodType", "Subscription period type is manadatory");
+		}
+		
+		if(subscriptionPeriodDuration == 0) {
+			messages.put("subscriptionPeriodDuration", "Subscription period duration is manadatory");
+		}
+		
 		if(messages.size() == 0) {
 			Society society = new Society();
 			
 			society.setSocietyName(societyName);
 			society.setLocalityId(localityId);
 			
-			int created = societyService.register(society);
+			Map extraData = new HashMap();
+			
+			extraData.put("subscriptionPeriodType", subscriptionPeriodType);
+			extraData.put("subscriptionPeriodDuration", subscriptionPeriodDuration);
+			extraData.put("user", request.getAttribute("user"));
+			
+			int created = societyService.register(society, extraData);
 			
 			if(created == 1) {
 				return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
@@ -130,6 +154,11 @@ public class SocietyController {
 			return new ResponseEntity<Map>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		return new ResponseEntity<Map>(messages, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Map>(response, HttpStatus.BAD_REQUEST);
+	}
+	
+	@RequestMapping(path = "/getAll", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<Map> getAll() {
+		return null;
 	}
 }

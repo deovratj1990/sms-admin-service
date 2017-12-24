@@ -10,7 +10,6 @@ import javax.persistence.Id;
 public class Locality {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column
 	private Integer localityId;
 	
 	@Column

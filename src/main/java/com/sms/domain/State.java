@@ -11,7 +11,6 @@ public class State {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column
 	private Integer stateId;
 	
 	@Column

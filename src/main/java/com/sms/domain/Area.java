@@ -10,7 +10,6 @@ import javax.persistence.Id;
 public class Area {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column
 	private Integer areaId;
 	
 	@Column

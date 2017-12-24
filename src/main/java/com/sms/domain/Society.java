@@ -11,7 +11,6 @@ public class Society {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column
 	private Integer societyId;
 	
 	@Column

@@ -5,10 +5,13 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import com.sms.domain.User;
 
 @Configuration
 public class Config {
@@ -49,6 +52,12 @@ public class Config {
 	@Bean
 	public DataSourceTransactionManager transactionManager(DataSource dataSource) {
 		return new DataSourceTransactionManager(dataSource);
+	}
+	
+	@Bean
+	@Scope(WebApplicationContext.SCOPE_REQUEST)
+	public User user() {
+		return new User();
 	}
 	
 }
