@@ -157,11 +157,11 @@ public class SocietyController {
 		return new ResponseEntity<Map>(response, HttpStatus.BAD_REQUEST);
 	}
 	
-	@RequestMapping(path = "/getAllSocietySubscription", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<Map> getAllSocietySubscription() {
-		List<Map> societySubscriptionList = societyService.getAllSocietySubscription();
-		
+	@RequestMapping(path = "/getAllSocietySubscription", method = RequestMethod.GET)
+	public ResponseEntity <Map> getAllSocietySubscription() {
 		Map response = new HashMap();
+		
+		List<Map> societySubscriptionList = societyService.getAllSocietySubscription();
 		
 		response.put("societySubscriptionList", societySubscriptionList);
 		

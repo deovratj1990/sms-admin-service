@@ -98,9 +98,10 @@ public class SocietyServiceImpl implements SocietyService {
 				societySubscription.put("societyName", societySubscriptionListObject.get(index)[0]);
 				societySubscription.put("localityName", societySubscriptionListObject.get(index)[1]);
 				societySubscription.put("pincodeName", societySubscriptionListObject.get(index)[2]);
-				societySubscription.put("subscriptionPeriodEndDate", societySubscriptionListObject.get(index)[3]);
-				societySubscription.put("subscriptionPeriodType", societySubscriptionListObject.get(index)[4]);
-				societySubscription.put("subscriptionPeriodStatus", societySubscriptionListObject.get(index)[5]);
+				societySubscription.put("subscriptionPeriodStartDate", societySubscriptionListObject.get(index)[3]);
+				societySubscription.put("subscriptionPeriodEndDate", societySubscriptionListObject.get(index)[4]);
+				societySubscription.put("subscriptionPeriodType", societySubscriptionListObject.get(index)[5]);
+				societySubscription.put("subscriptionPeriodStatus", societySubscriptionListObject.get(index)[6]);
 				
 				societySubscriptionList.add(societySubscription);
 			}
