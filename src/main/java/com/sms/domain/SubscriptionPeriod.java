@@ -47,6 +47,7 @@ public class SubscriptionPeriod {
 	private Float subscriptionPeriodAmount;
 	
 	@Column
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date subscriptionPeriodCreatedOn;
 	
 	@Column
@@ -54,6 +55,9 @@ public class SubscriptionPeriod {
 	
 	@Column
 	private Integer subscriptionPeriodStatus;
+	
+	@Column
+	private Integer subscriptionPeriodStatusModifiedBy;
 
 	public Integer getSubscriptionPeriodId() {
 		return subscriptionPeriodId;
@@ -133,5 +137,13 @@ public class SubscriptionPeriod {
 
 	public void setSubscriptionPeriodStatus(Integer subscriptionPeriodStatus) {
 		this.subscriptionPeriodStatus = subscriptionPeriodStatus;
+	}
+
+	public Integer getSubscriptionPeriodStatusModifiedBy() {
+		return subscriptionPeriodStatusModifiedBy;
+	}
+
+	public void setSubscriptionPeriodStatusModifiedBy(Integer subscriptionPeriodStatusModifiedBy) {
+		this.subscriptionPeriodStatusModifiedBy = subscriptionPeriodStatusModifiedBy;
 	}
 }

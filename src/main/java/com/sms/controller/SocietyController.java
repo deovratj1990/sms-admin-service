@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sms.domain.Society;
+import com.sms.domain.SubscriptionPeriod;
 import com.sms.request.body.SocietyRegister;
 import com.sms.service.SocietyService;
 
@@ -158,17 +160,36 @@ public class SocietyController {
 	}
 	
 	@RequestMapping(path = "/getAllSocietySubscription", method = RequestMethod.GET)
-	public ResponseEntity <Map> getAllSocietySubscription() {
-		Map response = new HashMap();
-		
+	public ResponseEntity<Map> getAllSocietySubscription() {
 		List<Map> societySubscriptionList = societyService.getAllSocietySubscription();
 		
-		response.put("societySubscriptionList", societySubscriptionList);
-		
 		if(societySubscriptionList.size() != 0) {
+			Map response = new HashMap();
+			
+			response.put("societySubscriptionList", societySubscriptionList);
+			
 			return new ResponseEntity<Map>(response, HttpStatus.OK);
-		} else {
+		}
+		
+		return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
+	}
+	
+	@RequestMapping(path = "/getSubscriptionBySocietyId", method = RequestMethod.GET)
+	public ResponseEntity<Map> getSubscriptionBySocietyId(@RequestParam int societyId) {
+		if(societyId > 0) {
+			List<SubscriptionPeriod> subscriptionList = societyService.getSubscriptionBySocietyId(societyId);
+			
+			if(subscriptionList.size() != 0) {
+				Map response = new HashMap();
+				
+				response.put("subscriptionList", subscriptionList);
+				
+				return new ResponseEntity<Map>(response, HttpStatus.OK);
+			}
+			
 			return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
 		}
+		
+		return new ResponseEntity<Map>(HttpStatus.BAD_REQUEST);
 	}
 }

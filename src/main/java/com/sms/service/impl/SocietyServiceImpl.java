@@ -46,9 +46,11 @@ public class SocietyServiceImpl implements SocietyService {
 				
 				int subscriptionPeriodDuration = (Integer) extraData.get("subscriptionPeriodDuration");
 				
+				Date today = new Date();
+				
 				Calendar calendar = Calendar.getInstance();
 				
-				calendar.setTime(new Date());
+				calendar.setTime(today);
 				
 				Date startDate = calendar.getTime();
 				
@@ -63,9 +65,10 @@ public class SocietyServiceImpl implements SocietyService {
 				subscriptionPeriod.setSubscriptionPeriodDuration(subscriptionPeriodDuration);
 				subscriptionPeriod.setSubscriptionPeriodStartDate(startDate);
 				subscriptionPeriod.setSubscriptionPeriodEndDate(endDate);
-				subscriptionPeriod.setSubscriptionPeriodCreatedOn(startDate);
+				subscriptionPeriod.setSubscriptionPeriodCreatedOn(today);
 				subscriptionPeriod.setSubscriptionPeriodCreatedBy(user.getUserId());
 				subscriptionPeriod.setSubscriptionPeriodStatus(SubscriptionPeriod.STATUS_ACTIVE);
+				subscriptionPeriod.setSubscriptionPeriodStatusModifiedBy(user.getUserId());
 				
 				subscriptionPeriodRepository.save(subscriptionPeriod);
 				
@@ -95,13 +98,17 @@ public class SocietyServiceImpl implements SocietyService {
 			for(int index = 0; index < societySubscriptionListObject.size(); index++) {
 				Map societySubscription = new HashMap();
 				
-				societySubscription.put("societyName", societySubscriptionListObject.get(index)[0]);
-				societySubscription.put("localityName", societySubscriptionListObject.get(index)[1]);
-				societySubscription.put("pincodeName", societySubscriptionListObject.get(index)[2]);
-				societySubscription.put("subscriptionPeriodStartDate", societySubscriptionListObject.get(index)[3]);
-				societySubscription.put("subscriptionPeriodEndDate", societySubscriptionListObject.get(index)[4]);
-				societySubscription.put("subscriptionPeriodType", societySubscriptionListObject.get(index)[5]);
-				societySubscription.put("subscriptionPeriodStatus", societySubscriptionListObject.get(index)[6]);
+				Object[] tempArray = societySubscriptionListObject.get(index);
+				int tempArrayIndex = 0;
+				
+				societySubscription.put("societyId", tempArray[tempArrayIndex++]);
+				societySubscription.put("societyName", tempArray[tempArrayIndex++]);
+				societySubscription.put("localityName", tempArray[tempArrayIndex++]);
+				societySubscription.put("pincodeName", tempArray[tempArrayIndex++]);
+				societySubscription.put("subscriptionPeriodStartDate", tempArray[tempArrayIndex++]);
+				societySubscription.put("subscriptionPeriodEndDate", tempArray[tempArrayIndex++]);
+				societySubscription.put("subscriptionPeriodType", tempArray[tempArrayIndex++]);
+				societySubscription.put("subscriptionPeriodStatus", tempArray[tempArrayIndex++]);
 				
 				societySubscriptionList.add(societySubscription);
 			}
@@ -109,5 +116,11 @@ public class SocietyServiceImpl implements SocietyService {
 		
 		return societySubscriptionList;
 	}
-	
+
+	@Override
+	public List<SubscriptionPeriod> getSubscriptionBySocietyId(Integer societyId) {
+		List<SubscriptionPeriod> subscriptionPeriodList = subscriptionPeriodRepository.findBySocietyIdOrderBySubscriptionPeriodEndDateDesc(societyId);
+		
+		return subscriptionPeriodList;
+	}
 }
