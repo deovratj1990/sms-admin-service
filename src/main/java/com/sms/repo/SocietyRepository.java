@@ -10,7 +10,7 @@ import com.sms.domain.Society;
 public interface SocietyRepository extends CrudRepository<Society, Integer>, SocietyRepositoryCustom {
 	public Society findBySocietyNameAndLocalityId(String societyName, Integer localityName);
 	
-	@Query(value = "select s.society_id, s.society_name, l.locality_name, p.pincode_name, sp.subscription_period_start_date, sp.subscription_period_end_date,"
+	@Query(value = "select s.society_id, sp.subscription_period_id, s.society_name, l.locality_name, p.pincode_name, sp.subscription_period_start_date, sp.subscription_period_end_date,"
 			+ " sp.subscription_period_type, sp.subscription_period_status"
 			+ " from society s"
 			+ " inner join locality l on s.locality_id = l.locality_id"

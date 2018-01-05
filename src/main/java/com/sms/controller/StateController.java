@@ -31,7 +31,6 @@ public class StateController {
 		
 		State state = new State();		
 		Boolean validated = true;
-		Boolean stateEdit = false;
 		
 		Map response = new HashMap();
 		Map messages = new HashMap();
@@ -41,7 +40,6 @@ public class StateController {
 		response.put("data", data);
 		
 		if(0 != requestBody.getStateId()) {
-			stateEdit = true;
 			state.setStateId(requestBody.getStateId());
 		}
 

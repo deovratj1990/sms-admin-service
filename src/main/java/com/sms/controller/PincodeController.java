@@ -31,7 +31,6 @@ public class PincodeController {
 		
 		Pincode pincode = new Pincode();		
 		Boolean validated = true;
-		Boolean pincodeEdit = false;
 		
 		Map response = new HashMap();
 		Map messages = new HashMap();
@@ -41,7 +40,6 @@ public class PincodeController {
 		response.put("data", data);
 		
 		if(0 != requestBody.getPincodeId()) {
-			pincodeEdit = true;
 			pincode.setPincodeId(requestBody.getPincodeId());
 		}
 

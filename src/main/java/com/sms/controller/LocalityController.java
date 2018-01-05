@@ -32,7 +32,6 @@ public class LocalityController {
 		
 		Locality locality = new Locality();		
 		Boolean validated = true;
-		Boolean localityEdit = false;
 		
 		Map response = new HashMap();
 		Map messages = new HashMap();
@@ -42,7 +41,6 @@ public class LocalityController {
 		response.put("data", data);
 		
 		if(0 != requestBody.getLocalityId()) {
-			localityEdit = true;
 			locality.setLocalityId(requestBody.getLocalityId());
 		}
 

@@ -31,7 +31,6 @@ public class AreaController {
 		
 		Area area = new Area();		
 		Boolean validated = true;
-		Boolean areaEdit = false;
 		
 		Map response = new HashMap();
 		Map messages = new HashMap();
@@ -41,7 +40,6 @@ public class AreaController {
 		response.put("data", data);
 		
 		if(0 != requestBody.getAreaId()) {
-			areaEdit = true;
 			area.setAreaId(requestBody.getAreaId());
 		}
 

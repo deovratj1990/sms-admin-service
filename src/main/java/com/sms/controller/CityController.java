@@ -32,7 +32,6 @@ public class CityController {
 		
 		City city = new City();		
 		Boolean validated = true;
-		Boolean cityEdit = false;
 		
 		Map response = new HashMap();
 		Map messages = new HashMap();
@@ -42,7 +41,6 @@ public class CityController {
 		response.put("data", data);
 		
 		if(0 != requestBody.getCityId()) {
-			cityEdit = true;
 			city.setCityId(requestBody.getCityId());
 		}
 

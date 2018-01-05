@@ -39,9 +39,7 @@ public class CountryController {
 		response.put("data", data);
 		
 		Country country = new Country();
-		Boolean countryEdit = false; 
 		if(requestBody.getCountryId() != 0) {
-			countryEdit = true;
 			country.setCountryId(requestBody.getCountryId());
 		}
 		

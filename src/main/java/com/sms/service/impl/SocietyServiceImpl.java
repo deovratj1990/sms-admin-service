@@ -102,6 +102,7 @@ public class SocietyServiceImpl implements SocietyService {
 				int tempArrayIndex = 0;
 				
 				societySubscription.put("societyId", tempArray[tempArrayIndex++]);
+				societySubscription.put("subscriptionPeriodId", tempArray[tempArrayIndex++]);
 				societySubscription.put("societyName", tempArray[tempArrayIndex++]);
 				societySubscription.put("localityName", tempArray[tempArrayIndex++]);
 				societySubscription.put("pincodeName", tempArray[tempArrayIndex++]);
