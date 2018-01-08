@@ -1,4 +1,4 @@
-package com.sms.request.body;
+package com.sms.payload.request;
 
 public class PincodeSave {
 	

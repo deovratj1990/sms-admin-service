@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sms.domain.Pincode;
-import com.sms.request.body.PincodeSave;
+import com.sms.payload.request.PincodeSave;
 import com.sms.service.PincodeService;
 
 @RestController

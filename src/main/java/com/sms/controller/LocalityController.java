@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sms.domain.Locality;
 import com.sms.domain.Pincode;
-import com.sms.request.body.LocalitySave;
+import com.sms.payload.request.LocalitySave;
 import com.sms.service.LocalityService;
 
 @RestController

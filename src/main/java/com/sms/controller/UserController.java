@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sms.domain.User;
-import com.sms.request.body.UserLogin;
+import com.sms.payload.request.UserLogin;
 import com.sms.security.auth.TokenManager;
 import com.sms.service.UserService;
 

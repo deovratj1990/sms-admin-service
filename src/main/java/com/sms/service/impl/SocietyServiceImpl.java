@@ -1,5 +1,6 @@
 package com.sms.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -7,26 +8,40 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sms.domain.Society;
-import com.sms.domain.SubscriptionPeriod;
+import com.sms.domain.Subscription;
+import com.sms.domain.SubscriptionStatus;
+import com.sms.domain.SubscriptionType;
+import com.sms.domain.Transaction;
+import com.sms.domain.TransactionType;
 import com.sms.domain.User;
+import com.sms.payload.request.SocietyRegister;
+import com.sms.payload.request.SubscriptionSave;
 import com.sms.repo.SocietyRepository;
-import com.sms.repo.SubscriptionPeriodRepository;
+import com.sms.repo.SubscriptionRepository;
+import com.sms.repo.TransactionRepository;
 import com.sms.service.SocietyService;
 
 @Service
 public class SocietyServiceImpl implements SocietyService {
 	
 	@Autowired
+	private HttpServletRequest request;
+	
+	@Autowired
 	private SocietyRepository societyRepository;
 	
 	@Autowired
-	private SubscriptionPeriodRepository subscriptionPeriodRepository;
+	private SubscriptionRepository subscriptionRepository;
+	
+	@Autowired
+	private TransactionRepository transactionRepository;
 
 	@Override
 	public Society search(Society society) {
@@ -35,16 +50,17 @@ public class SocietyServiceImpl implements SocietyService {
 
 	@Override
 	@Transactional
-	public int register(Society society, Map extraData) {
+	public int register(SocietyRegister requestPayload) {
 		try {
+			User user = (User) request.getAttribute("user");
+			
+			Society society = new Society();
+			
+			society.setSocietyName(requestPayload.getSocietyName());
+			society.setLocalityId(requestPayload.getLocalityId());
+			
 			if(search(society) == null) {
 				society = societyRepository.save(society);
-				
-				SubscriptionPeriod subscriptionPeriod = new SubscriptionPeriod();
-				
-				int subscriptionPeriodType = (Integer) extraData.get("subscriptionPeriodType");
-				
-				int subscriptionPeriodDuration = (Integer) extraData.get("subscriptionPeriodDuration");
 				
 				Date today = new Date();
 				
@@ -54,23 +70,36 @@ public class SocietyServiceImpl implements SocietyService {
 				
 				Date startDate = calendar.getTime();
 				
-				calendar.add(Calendar.MONTH, (Integer) extraData.get("subscriptionPeriodDuration"));
+				calendar.add(Calendar.MONTH, requestPayload.getSubscriptionDuration());
 				
 				Date endDate = calendar.getTime();
 				
-				User user = (User) extraData.get("user");
+				Subscription subscription = new Subscription();
 				
-				subscriptionPeriod.setSocietyId(society.getSocietyId());
-				subscriptionPeriod.setSubscriptionPeriodType(subscriptionPeriodType);
-				subscriptionPeriod.setSubscriptionPeriodDuration(subscriptionPeriodDuration);
-				subscriptionPeriod.setSubscriptionPeriodStartDate(startDate);
-				subscriptionPeriod.setSubscriptionPeriodEndDate(endDate);
-				subscriptionPeriod.setSubscriptionPeriodCreatedOn(today);
-				subscriptionPeriod.setSubscriptionPeriodCreatedBy(user.getUserId());
-				subscriptionPeriod.setSubscriptionPeriodStatus(SubscriptionPeriod.STATUS_ACTIVE);
-				subscriptionPeriod.setSubscriptionPeriodStatusModifiedBy(user.getUserId());
+				subscription.setSocietyId(society.getSocietyId());
+				subscription.setSubscriptionType(SubscriptionType.getFor(requestPayload.getSubscriptionType()));
+				subscription.setSubscriptionDuration(requestPayload.getSubscriptionDuration());
+				subscription.setSubscriptionCreatedBy(user.getUserId());
+				subscription.setSubscriptionStartDate(startDate);
+				subscription.setSubscriptionEndDate(endDate);
+				subscription.setSubscriptionCreatedOn(today);
+				subscription.setSubscriptionStatus(SubscriptionStatus.ACTIVE);
+				subscription.setSubscriptionStatusModifiedBy(null);
 				
-				subscriptionPeriodRepository.save(subscriptionPeriod);
+				subscription = subscriptionRepository.save(subscription);
+				
+				if(subscription.getSubscriptionType() == SubscriptionType.PAID) {
+					Transaction transaction = new Transaction();
+					
+					transaction.setSubscriptionId(subscription.getSubscriptionId());
+					transaction.setTransactionAmount(requestPayload.getTransactionAmount());
+					transaction.setTransactionType(TransactionType.getFor(requestPayload.getTransactionType()));
+					transaction.setTransactionDetail(requestPayload.getTransactionDetail());
+					transaction.setTransactionCreatedOn(today);
+					transaction.setTransactionCreatedBy(user.getUserId());
+					
+					transaction = transactionRepository.save(transaction);
+				}
 				
 				String societyDbName = "society_" + society.getSocietyId();
 				
@@ -99,17 +128,23 @@ public class SocietyServiceImpl implements SocietyService {
 				Map societySubscription = new HashMap();
 				
 				Object[] tempArray = societySubscriptionListObject.get(index);
-				int tempArrayIndex = 0;
+				int tempArrayIndex = -1;
 				
-				societySubscription.put("societyId", tempArray[tempArrayIndex++]);
-				societySubscription.put("subscriptionPeriodId", tempArray[tempArrayIndex++]);
-				societySubscription.put("societyName", tempArray[tempArrayIndex++]);
-				societySubscription.put("localityName", tempArray[tempArrayIndex++]);
-				societySubscription.put("pincodeName", tempArray[tempArrayIndex++]);
-				societySubscription.put("subscriptionPeriodStartDate", tempArray[tempArrayIndex++]);
-				societySubscription.put("subscriptionPeriodEndDate", tempArray[tempArrayIndex++]);
-				societySubscription.put("subscriptionPeriodType", tempArray[tempArrayIndex++]);
-				societySubscription.put("subscriptionPeriodStatus", tempArray[tempArrayIndex++]);
+				SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+				
+				societySubscription.put("societyId", tempArray[++tempArrayIndex]);
+				societySubscription.put("subscriptionId", tempArray[++tempArrayIndex]);
+				societySubscription.put("societyName", tempArray[++tempArrayIndex]);
+				societySubscription.put("localityName", tempArray[++tempArrayIndex]);
+				societySubscription.put("pincodeName", tempArray[++tempArrayIndex]);
+				societySubscription.put("subscriptionStartDate", tempArray[++tempArrayIndex]);
+				societySubscription.put("subscriptionStartDateText", df.format(tempArray[tempArrayIndex]));
+				societySubscription.put("subscriptionEndDate", tempArray[++tempArrayIndex]);
+				societySubscription.put("subscriptionEndDateText", df.format(tempArray[tempArrayIndex]));
+				societySubscription.put("subscriptionType", tempArray[++tempArrayIndex]);
+				societySubscription.put("subscriptionTypeText", SubscriptionType.getFor((Integer) tempArray[tempArrayIndex]).getText());
+				societySubscription.put("subscriptionStatus", tempArray[++tempArrayIndex]);
+				societySubscription.put("subscriptionStatusText", SubscriptionStatus.getFor((Integer) tempArray[tempArrayIndex]).getText());
 				
 				societySubscriptionList.add(societySubscription);
 			}
@@ -119,9 +154,33 @@ public class SocietyServiceImpl implements SocietyService {
 	}
 
 	@Override
-	public List<SubscriptionPeriod> getSubscriptionBySocietyId(Integer societyId) {
-		List<SubscriptionPeriod> subscriptionPeriodList = subscriptionPeriodRepository.findBySocietyIdOrderBySubscriptionPeriodEndDateDesc(societyId);
+	public List<Subscription> getSubscriptionBySocietyId(Integer societyId) {
+		List<Subscription> subscriptionList = subscriptionRepository.findBySocietyIdOrderBySubscriptionEndDateDesc(societyId);
 		
-		return subscriptionPeriodList;
+		return subscriptionList;
+	}
+	
+	@Override
+	public Subscription getSubscription(Integer subscriptionId) {
+		Subscription subscription = subscriptionRepository.findOne(subscriptionId);
+		
+		return subscription;
+	}
+
+	@Override
+	public Subscription saveSubscription(SubscriptionSave requestPayload) {
+		Subscription subscription = new Subscription();
+		
+		if(0 != requestPayload.getSubscriptionId()) {
+			subscription.setSubscriptionId(requestPayload.getSubscriptionId());
+		}
+		
+		subscription.setSubscriptionType(SubscriptionType.getFor(requestPayload.getSubscriptionType()));
+		
+		subscription.setSubscriptionStatus(SubscriptionStatus.getFor(requestPayload.getSubscriptionStatus()));
+		
+		
+		
+		return null;
 	}
 }

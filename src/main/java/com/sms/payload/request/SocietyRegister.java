@@ -1,4 +1,4 @@
-package com.sms.request.body;
+package com.sms.payload.request;
 
 import java.util.List;
 
@@ -27,9 +27,17 @@ public class SocietyRegister {
 	
 	private String secretaryMobile;
 	
-	private int subscriptionPeriodType;
+	private int subscriptionType;
 	
-	private int subscriptionPeriodDuration;
+	private int subscriptionDuration;
+	
+	private float subscriptionAmount;
+	
+	private float transactionAmount;
+	
+	private int transactionType;
+	
+	private String transactionDetail;
 
 	public String getSocietyName() {
 		return societyName;
@@ -127,19 +135,51 @@ public class SocietyRegister {
 		this.secretaryMobile = secretaryMobile;
 	}
 
-	public int getSubscriptionPeriodType() {
-		return subscriptionPeriodType;
+	public int getSubscriptionType() {
+		return subscriptionType;
 	}
 
-	public void setSubscriptionPeriodType(int subscriptionPeriodType) {
-		this.subscriptionPeriodType = subscriptionPeriodType;
+	public void setSubscriptionType(int subscriptionType) {
+		this.subscriptionType = subscriptionType;
 	}
 
-	public int getSubscriptionPeriodDuration() {
-		return subscriptionPeriodDuration;
+	public int getSubscriptionDuration() {
+		return subscriptionDuration;
 	}
 
-	public void setSubscriptionPeriodDuration(int subscriptionPeriodDuration) {
-		this.subscriptionPeriodDuration = subscriptionPeriodDuration;
+	public void setSubscriptionDuration(int subscriptionDuration) {
+		this.subscriptionDuration = subscriptionDuration;
+	}
+
+	public float getSubscriptionAmount() {
+		return subscriptionAmount;
+	}
+
+	public void setSubscriptionAmount(float subscriptionAmount) {
+		this.subscriptionAmount = subscriptionAmount;
+	}
+
+	public float getTransactionAmount() {
+		return transactionAmount;
+	}
+
+	public void setTransactionAmount(float transactionAmount) {
+		this.transactionAmount = transactionAmount;
+	}
+
+	public int getTransactionType() {
+		return transactionType;
+	}
+
+	public void setTransactionType(int transactionType) {
+		this.transactionType = transactionType;
+	}
+
+	public String getTransactionDetail() {
+		return transactionDetail;
+	}
+
+	public void setTransactionDetail(String transactionDetail) {
+		this.transactionDetail = transactionDetail;
 	}
 }

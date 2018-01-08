@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sms.domain.Area;
-import com.sms.request.body.AreaSave;
+import com.sms.payload.request.AreaSave;
 import com.sms.service.AreaService;
 
 @RestController

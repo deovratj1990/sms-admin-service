@@ -4,14 +4,20 @@ import java.util.List;
 import java.util.Map;
 
 import com.sms.domain.Society;
-import com.sms.domain.SubscriptionPeriod;
+import com.sms.domain.Subscription;
+import com.sms.payload.request.SocietyRegister;
+import com.sms.payload.request.SubscriptionSave;
 
 public interface SocietyService {
 	public Society search(Society society);
 	
-	public int register(Society society, Map extraData);
+	public int register(SocietyRegister requestPayload);
 	
 	public List<Map> getAllSocietySubscription();
 	
-	public List<SubscriptionPeriod> getSubscriptionBySocietyId(Integer societyId);
+	public List<Subscription> getSubscriptionBySocietyId(Integer societyId);
+	
+	public Subscription getSubscription(Integer subscriptionId);
+	
+	public Subscription saveSubscription(SubscriptionSave requestPayload);
 }

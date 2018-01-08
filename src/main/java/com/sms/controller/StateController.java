@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sms.domain.State;
-import com.sms.request.body.StateSave;
+import com.sms.payload.request.StateSave;
 import com.sms.service.StateService;
 
 @RestController

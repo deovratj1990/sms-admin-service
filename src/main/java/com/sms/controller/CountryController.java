@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sms.domain.Country;
-import com.sms.request.body.CountrySave;
+import com.sms.payload.request.CountrySave;
 import com.sms.service.CountryService;
 
 @RestController

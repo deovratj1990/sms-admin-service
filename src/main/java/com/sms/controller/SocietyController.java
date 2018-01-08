@@ -1,9 +1,9 @@
 package com.sms.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.sms.domain.Society;
-import com.sms.domain.SubscriptionPeriod;
-import com.sms.request.body.SocietyRegister;
+import com.sms.domain.Subscription;
+import com.sms.domain.SubscriptionStatus;
+import com.sms.domain.SubscriptionType;
+import com.sms.domain.TransactionType;
+import com.sms.payload.request.SocietyRegister;
+import com.sms.payload.request.SubscriptionSave;
 import com.sms.service.SocietyService;
 
 @Controller
@@ -43,8 +46,11 @@ public class SocietyController {
 		String secretaryWing = requestBody.getSecretaryWing();
 		String secretaryRoom = requestBody.getSecretaryRoom();
 		String secretaryMobile = requestBody.getSecretaryMobile();
-		int subscriptionPeriodType = requestBody.getSubscriptionPeriodType();
-		int subscriptionPeriodDuration = requestBody.getSubscriptionPeriodDuration();
+		Integer subscriptionType = requestBody.getSubscriptionType();
+		Integer subscriptionDuration = requestBody.getSubscriptionDuration();
+		Float subscriptionAmount = requestBody.getSubscriptionAmount();
+		Float transactionAmount = requestBody.getTransactionAmount();
+		Integer transactionType = requestBody.getTransactionType();
 		
 		Map messages = new HashMap();
 		Map data = new HashMap();
@@ -121,31 +127,30 @@ public class SocietyController {
 		
 		if(secretaryMobile == null || secretaryMobile.trim().length() == 0) {
 			messages.put("secretaryMobile", "Secretary mobile is manadatory");
-		} else if(!Pattern.matches("[0-9]{10,10}", secretaryMobile.trim())) {
-			messages.put("secretaryMobile", "Secretary mobile is not valid");
 		}
 		
-		if(subscriptionPeriodType == 0) {
-			messages.put("subscriptionPeriodType", "Subscription period type is manadatory");
+		if(Arrays.binarySearch(SubscriptionType.values(), subscriptionType) < 0) {
+			messages.put("subscriptionType", "Subscription type is invalid");
 		}
 		
-		if(subscriptionPeriodDuration == 0) {
-			messages.put("subscriptionPeriodDuration", "Subscription period duration is manadatory");
+		if(SubscriptionType.PAID.getValue() == subscriptionType) {
+			if(subscriptionDuration == 0) {
+				messages.put("subscriptionDuration", "Subscription duration is mandatory");
+			}
+			
+			if(subscriptionAmount == 0) {
+				messages.put("subscriptionAmount", "Subscription amount is manadatory");
+			}
+			
+			if(transactionAmount > 0) {
+				if(Arrays.binarySearch(TransactionType.values(), transactionType) < 0) {
+					messages.put("transactionType", "Transaction type is invalid");
+				}
+			}
 		}
 		
 		if(messages.size() == 0) {
-			Society society = new Society();
-			
-			society.setSocietyName(societyName);
-			society.setLocalityId(localityId);
-			
-			Map extraData = new HashMap();
-			
-			extraData.put("subscriptionPeriodType", subscriptionPeriodType);
-			extraData.put("subscriptionPeriodDuration", subscriptionPeriodDuration);
-			extraData.put("user", request.getAttribute("user"));
-			
-			int created = societyService.register(society, extraData);
+			int created = societyService.register(requestBody);
 			
 			if(created == 1) {
 				return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
@@ -177,7 +182,7 @@ public class SocietyController {
 	@RequestMapping(path = "/getSubscriptionBySocietyId", method = RequestMethod.GET)
 	public ResponseEntity<Map> getSubscriptionBySocietyId(@RequestParam int societyId) {
 		if(societyId > 0) {
-			List<SubscriptionPeriod> subscriptionList = societyService.getSubscriptionBySocietyId(societyId);
+			List<Subscription> subscriptionList = societyService.getSubscriptionBySocietyId(societyId);
 			
 			if(subscriptionList.size() != 0) {
 				Map response = new HashMap();
@@ -191,5 +196,53 @@ public class SocietyController {
 		}
 		
 		return new ResponseEntity<Map>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@RequestMapping(path="/saveSubscription", method=RequestMethod.PUT)
+	public ResponseEntity<Map> saveSubscription(@RequestBody SubscriptionSave requestBody) {
+		Boolean validated = true;
+		
+		Map message = new HashMap();
+		Map data = new HashMap();
+		
+		Map response = new HashMap();
+		
+		response.put("message", message);
+		response.put("data", data);
+
+		if(SubscriptionType.exists(requestBody.getSubscriptionType())) {
+			validated = false;
+			message.put("SubscriptionType", "Cannot be blank!");
+		}
+
+		if(SubscriptionStatus.exists(requestBody.getSubscriptionStatus())) {
+			validated = false;
+			message.put("SubscriptionStatus", "Cannot be blank!");
+		}
+		
+		if(validated) {
+			Subscription subscription = societyService.saveSubscription(requestBody);
+			
+			data.put("subscriptionId", subscription.getSubscriptionId());
+			
+			return new ResponseEntity<Map>(response, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Map>(response, HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@RequestMapping(path="/getSubscription", method = RequestMethod.GET)
+	public ResponseEntity<Subscription> getSubscription(@RequestParam int subscriptionId) {
+		if(subscriptionId > 0) {
+			Subscription subscription = societyService.getSubscription(subscriptionId);
+			
+			if(subscription != null) {
+				return new ResponseEntity<Subscription>(subscription, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Subscription>(HttpStatus.NO_CONTENT);
+			}			
+		}
+		
+		return new ResponseEntity<Subscription>(HttpStatus.BAD_REQUEST);
 	}
 }

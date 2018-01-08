@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sms.domain.City;
 import com.sms.domain.State;
-import com.sms.request.body.CitySave;
+import com.sms.payload.request.CitySave;
 import com.sms.service.CityService;
 
 @RestController
