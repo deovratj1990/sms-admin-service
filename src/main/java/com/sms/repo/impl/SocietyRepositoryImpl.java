@@ -1,5 +1,8 @@
 package com.sms.repo.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -49,6 +52,19 @@ public class SocietyRepositoryImpl implements SocietyRepositoryCustom {
 		
 		for(int index = 0; index < batchResult.length; index++) {
 			created = created && (batchResult[index] != 0);
+		}
+		
+		return created;
+	}
+
+	@Override
+	public boolean initializeDbTables(String dbName, Map<String, List<String>> wingNameMap) {
+		boolean created = false;
+		
+		for(Map.Entry<String, List<String>> wingNameEntry : wingNameMap.entrySet()) {
+			jdbcTemplate.update("INSERT INTO `" + dbName + "`.`wing` (`wing_name`, `society_id`) VALUES (?, ?);");
+			
+			
 		}
 		
 		return created;

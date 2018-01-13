@@ -17,7 +17,7 @@ public interface SocietyService {
 	
 	public List<Subscription> getSubscriptionBySocietyId(Integer societyId);
 	
-	public Subscription getSubscription(Integer subscriptionId);
+	public Map getSubscriptionTransaction(Integer subscriptionId);
 	
 	public Subscription saveSubscription(SubscriptionSave requestPayload);
 }

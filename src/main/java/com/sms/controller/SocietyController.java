@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sms.domain.Subscription;
-import com.sms.domain.SubscriptionStatus;
-import com.sms.domain.SubscriptionType;
-import com.sms.domain.TransactionType;
+import com.sms.domain.constant.SubscriptionStatus;
+import com.sms.domain.constant.SubscriptionType;
+import com.sms.domain.constant.TransactionType;
 import com.sms.payload.request.SocietyRegister;
 import com.sms.payload.request.SubscriptionSave;
 import com.sms.service.SocietyService;
@@ -133,7 +133,7 @@ public class SocietyController {
 			messages.put("subscriptionType", "Subscription type is invalid");
 		}
 		
-		if(SubscriptionType.PAID.getValue() == subscriptionType) {
+		if(SubscriptionType.PAID.toInteger() == subscriptionType) {
 			if(subscriptionDuration == 0) {
 				messages.put("subscriptionDuration", "Subscription duration is mandatory");
 			}
@@ -210,12 +210,12 @@ public class SocietyController {
 		response.put("message", message);
 		response.put("data", data);
 
-		if(SubscriptionType.exists(requestBody.getSubscriptionType())) {
+		if(SubscriptionType.contains(requestBody.getSubscriptionType())) {
 			validated = false;
 			message.put("SubscriptionType", "Cannot be blank!");
 		}
 
-		if(SubscriptionStatus.exists(requestBody.getSubscriptionStatus())) {
+		if(SubscriptionStatus.contains(requestBody.getSubscriptionStatus())) {
 			validated = false;
 			message.put("SubscriptionStatus", "Cannot be blank!");
 		}
@@ -231,18 +231,22 @@ public class SocietyController {
 		}
 	}
 	
-	@RequestMapping(path="/getSubscription", method = RequestMethod.GET)
-	public ResponseEntity<Subscription> getSubscription(@RequestParam int subscriptionId) {
+	@RequestMapping(path="/getSubscriptionTransaction", method = RequestMethod.GET)
+	public ResponseEntity<Map> getSubscriptionTransaction(@RequestParam int subscriptionId) {
 		if(subscriptionId > 0) {
-			Subscription subscription = societyService.getSubscription(subscriptionId);
+			Map subscriptionTransaction = societyService.getSubscriptionTransaction(subscriptionId);
 			
-			if(subscription != null) {
-				return new ResponseEntity<Subscription>(subscription, HttpStatus.OK);
+			if(subscriptionTransaction != null) {
+				Map data = new HashMap();
+				
+				data.put("subscriptionTransaction", subscriptionTransaction);
+				
+				return new ResponseEntity<Map>(data, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<Subscription>(HttpStatus.NO_CONTENT);
+				return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
 			}			
 		}
 		
-		return new ResponseEntity<Subscription>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Map>(HttpStatus.BAD_REQUEST);
 	}
 }

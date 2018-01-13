@@ -3,6 +3,7 @@ package com.sms.domain;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,12 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.sms.domain.constant.TransactionStatus;
+import com.sms.domain.constant.TransactionType;
+import com.sms.domain.converter.TransactionStatusConverter;
+import com.sms.domain.converter.TransactionTypeConverter;
+
 @Entity
 public class Transaction {
-	public static final String TYPE_CASH = "CASH";
-	public static final String TYPE_CHEQUE = "CHEQUE";
-	public static final String TYPE_OTHER = "OTHER";
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer transactionId;
@@ -27,10 +29,15 @@ public class Transaction {
 	private Float transactionAmount;
 	
 	@Column
+	@Convert(converter = TransactionTypeConverter.class)
 	private TransactionType transactionType;
 	
 	@Column
 	private String transactionDetail;
+	
+	@Column
+	@Convert(converter = TransactionStatusConverter.class)
+	private TransactionStatus transactionStatus;
 	
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)

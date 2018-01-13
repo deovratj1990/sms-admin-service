@@ -3,12 +3,18 @@ package com.sms.domain;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.sms.domain.constant.SubscriptionStatus;
+import com.sms.domain.constant.SubscriptionType;
+import com.sms.domain.converter.SubscriptionStatusConverter;
+import com.sms.domain.converter.SubscriptionTypeConverter;
 
 @Entity
 public class Subscription {
@@ -20,10 +26,14 @@ public class Subscription {
 	private Integer societyId;
 	
 	@Column
+	@Convert(converter = SubscriptionTypeConverter.class)
 	private SubscriptionType subscriptionType;
 	
 	@Column
 	private Integer subscriptionDuration;
+	
+	@Column
+	private Float subscriptionAmount;
 	
 	@Column
 	@Temporal(TemporalType.DATE)
@@ -41,6 +51,7 @@ public class Subscription {
 	private Integer subscriptionCreatedBy;
 	
 	@Column
+	@Convert(converter = SubscriptionStatusConverter.class)
 	private SubscriptionStatus subscriptionStatus;
 	
 	@Column
@@ -80,6 +91,14 @@ public class Subscription {
 
 	public void setSubscriptionDuration(Integer subscriptionDuration) {
 		this.subscriptionDuration = subscriptionDuration;
+	}
+
+	public Float getSubscriptionAmount() {
+		return subscriptionAmount;
+	}
+
+	public void setSubscriptionAmount(Float subscriptionAmount) {
+		this.subscriptionAmount = subscriptionAmount;
 	}
 
 	public Date getSubscriptionStartDate() {
