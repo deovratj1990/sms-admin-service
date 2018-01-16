@@ -8,5 +8,5 @@ public interface SocietyRepositoryCustom {
 	
 	public boolean createDbTables(String dbName);
 	
-	public boolean initializeDbTables(String dbName, Map<String, List<String>> wingNameMap);
+	public boolean initializeDbTables(String dbName, Integer societyId, Map<String, List<String>> wingNameMap);
 }

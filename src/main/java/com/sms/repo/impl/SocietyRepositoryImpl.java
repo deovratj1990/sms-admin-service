@@ -1,5 +1,7 @@
 package com.sms.repo.impl;
 
+import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -58,14 +60,25 @@ public class SocietyRepositoryImpl implements SocietyRepositoryCustom {
 	}
 
 	@Override
-	public boolean initializeDbTables(String dbName, Map<String, List<String>> wingNameMap) {
+	public boolean initializeDbTables(String dbName, Integer societyId, Map<String, List<String>> wingNameMap) {
 		boolean created = false;
 		
+		List<Object[]> wingValueList = new ArrayList<Object[]>();
+		int[] wingValueType = new int[] {Types.VARCHAR, Types.INTEGER};
+		
+		List<Object[]> roomValueList = new ArrayList<Object[]>();
+		int[] roomValueType = new int[] {Types.VARCHAR, Types.INTEGER};
+		
 		for(Map.Entry<String, List<String>> wingNameEntry : wingNameMap.entrySet()) {
-			jdbcTemplate.update("INSERT INTO `" + dbName + "`.`wing` (`wing_name`, `society_id`) VALUES (?, ?);");
+			Object[] wingValue = new Object[2];
 			
+			wingValue[0] = wingNameEntry.getKey();
+			wingValue[1] = societyId;
 			
+			wingValueList.add(wingValue);
 		}
+		
+		jdbcTemplate.update("INSERT INTO `" + dbName + "`.`wing` (`wing_name`, `society_id`) VALUES (?, ?);");
 		
 		return created;
 	}

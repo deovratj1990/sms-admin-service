@@ -139,7 +139,7 @@ public class SocietyServiceImpl implements SocietyService {
 					wingRoomMap.put(wingNameList.get(wingNameIndex), roomList);
 				}
 				
-				societyRepository.initializeDbTables(societyDbName, wingRoomMap);
+				societyRepository.initializeDbTables(societyDbName, society.getSocietyId(), wingRoomMap);
 				
 				return 1;
 			} else {
