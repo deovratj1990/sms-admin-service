@@ -4,9 +4,21 @@ import java.util.List;
 import java.util.Map;
 
 public interface SocietyRepositoryCustom {
-	public boolean createDb(String dbName);
+	public void createDatabase(String databaseName);
 	
-	public boolean createDbTables(String dbName);
+	public void setDatabase(String databaseName);
 	
-	public boolean initializeDbTables(String dbName, Integer societyId, Map<String, List<String>> wingNameMap);
+	public void createTables();
+	
+	public Integer getWingIdByWingName(String wingName);
+	
+	public Integer getRoomIdByWingNameAndRoomName(String wingName, String roomNumber);
+	
+	public void insertRoles();
+	
+	public void insertWings(Integer societyId, List<String> wingDetails);
+	
+	public void insertRooms(Integer societyId, Integer wingId, List<Map<String, String>> roomDetails);
+	
+	public void insertSecretary(Map<String, Object> secretaryDetails);
 }

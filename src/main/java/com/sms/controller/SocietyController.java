@@ -1,6 +1,6 @@
 package com.sms.controller;
 
-import java.util.Arrays;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +21,7 @@ import com.sms.domain.Subscription;
 import com.sms.domain.constant.SubscriptionStatus;
 import com.sms.domain.constant.SubscriptionType;
 import com.sms.domain.constant.TransactionType;
+import com.sms.exception.DuplicateDataException;
 import com.sms.payload.request.SocietyRegister;
 import com.sms.payload.request.SubscriptionSave;
 import com.sms.service.SocietyService;
@@ -129,7 +130,7 @@ public class SocietyController {
 			messages.put("secretaryMobile", "Secretary mobile is manadatory");
 		}
 		
-		if(Arrays.binarySearch(SubscriptionType.values(), subscriptionType) < 0) {
+		if(!SubscriptionType.contains(subscriptionType)) {
 			messages.put("subscriptionType", "Subscription type is invalid");
 		}
 		
@@ -143,22 +144,22 @@ public class SocietyController {
 			}
 			
 			if(transactionAmount > 0) {
-				if(Arrays.binarySearch(TransactionType.values(), transactionType) < 0) {
+				if(!TransactionType.contains(transactionType)) {
 					messages.put("transactionType", "Transaction type is invalid");
 				}
 			}
 		}
 		
 		if(messages.size() == 0) {
-			int created = societyService.register(requestBody);
-			
-			if(created == 1) {
+			try {
+				societyService.register(requestBody);
+				
 				return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
-			} else if(created == -1) {
+			} catch(DuplicateDataException ex) {
 				return new ResponseEntity<Map>(HttpStatus.CONFLICT);
+			} catch(SQLException sqlException) {
+				return new ResponseEntity<Map>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
-			
-			return new ResponseEntity<Map>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		return new ResponseEntity<Map>(response, HttpStatus.BAD_REQUEST);
@@ -166,7 +167,7 @@ public class SocietyController {
 	
 	@RequestMapping(path = "/getAllSocietySubscription", method = RequestMethod.GET)
 	public ResponseEntity<Map> getAllSocietySubscription() {
-		List<Map> societySubscriptionList = societyService.getAllSocietySubscription();
+		List<Map<String, Object>> societySubscriptionList = societyService.getAllSocietySubscription();
 		
 		if(societySubscriptionList.size() != 0) {
 			Map response = new HashMap();
