@@ -1,0 +1,15 @@
+package com.sms.security.auth;
+
+public enum ModuleComponent {
+	ROLE,
+	USER,
+	ADDRESS_COUNTRY,
+	ADDRESS_STATE,
+	ADDRESS_CITY,
+	ADDRESS_AREA,
+	ADDRESS_PINCODE,
+	ADDRESS_LOCALITY,
+	SOCIETY,
+	SUBSCRIPTION,
+	PERMISSION;
+}
