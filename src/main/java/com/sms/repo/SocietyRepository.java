@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import com.sms.domain.Society;
 
@@ -21,4 +22,17 @@ public interface SocietyRepository extends CrudRepository<Society, Integer>, Soc
 			+ " where subIn.societyId = s.societyId"
 		+ ")")
 	public List<Object[]> getAllSocietySubscription();
+	
+	@Query("select societyRoomCount, ("
+			+ "select max(subscriptionEndDate)"
+			+ " from Subscription"
+			+ " where societyId = :societyId"
+			+ " and ("
+				+ "subscriptionStatus = com.sms.domain.constant.SubscriptionStatus.ACTIVE"
+				+ " or subscriptionStatus = com.sms.domain.constant.SubscriptionStatus.FUTURE"
+			+ ")"
+		+ ") as subscriptionEndDate"
+		+ " from Society"
+		+ " where societyId = :societyId")
+	public List<Object[]> getInfoForAddSubscription(@Param("societyId") Integer societyId);
 }

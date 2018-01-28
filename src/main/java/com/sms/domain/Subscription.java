@@ -11,8 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.sms.domain.constant.SubscriptionPaymentStatus;
 import com.sms.domain.constant.SubscriptionStatus;
 import com.sms.domain.constant.SubscriptionType;
+import com.sms.domain.converter.SubscriptionPaymentStatusConverter;
 import com.sms.domain.converter.SubscriptionStatusConverter;
 import com.sms.domain.converter.SubscriptionTypeConverter;
 
@@ -55,11 +57,8 @@ public class Subscription {
 	private SubscriptionStatus subscriptionStatus;
 	
 	@Column
-	private Integer subscriptionStatusModifiedBy;
-	
-	@Column
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date subscriptionStatusModifiedOn;
+	@Convert(converter = SubscriptionPaymentStatusConverter.class)
+	private SubscriptionPaymentStatus subscriptionPaymentStatus;
 
 	public Integer getSubscriptionId() {
 		return subscriptionId;
@@ -141,19 +140,11 @@ public class Subscription {
 		this.subscriptionStatus = subscriptionStatus;
 	}
 
-	public Integer getSubscriptionStatusModifiedBy() {
-		return subscriptionStatusModifiedBy;
+	public SubscriptionPaymentStatus getSubscriptionPaymentStatus() {
+		return subscriptionPaymentStatus;
 	}
 
-	public void setSubscriptionStatusModifiedBy(Integer subscriptionStatusModifiedBy) {
-		this.subscriptionStatusModifiedBy = subscriptionStatusModifiedBy;
-	}
-
-	public Date getSubscriptionStatusModifiedOn() {
-		return subscriptionStatusModifiedOn;
-	}
-
-	public void setSubscriptionStatusModifiedOn(Date subscriptionStatusModifiedOn) {
-		this.subscriptionStatusModifiedOn = subscriptionStatusModifiedOn;
+	public void setSubscriptionPaymentStatus(SubscriptionPaymentStatus subscriptionPaymentStatus) {
+		this.subscriptionPaymentStatus = subscriptionPaymentStatus;
 	}
 }

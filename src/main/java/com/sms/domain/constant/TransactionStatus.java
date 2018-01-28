@@ -6,7 +6,8 @@ import java.util.Map;
 public enum TransactionStatus {
 	PENDING(1, "Pending"),
 	SUCCESSFUL(2, "Successful"),
-	FAILED(3, "Failed");
+	FAILED(3, "Failed"),
+	DELETED(4, "Deleted");
 	
 	private static Map<Integer, TransactionStatus> map;
 	

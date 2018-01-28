@@ -1,10 +1,14 @@
 package com.sms.domain;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import com.sms.domain.constant.SocietyStatus;
+import com.sms.domain.converter.SocietyStatusConverter;
 
 @Entity
 public class Society {
@@ -24,6 +28,10 @@ public class Society {
 	
 	@Column
 	private Integer societyRoomCount;
+	
+	@Column
+	@Convert(converter = SocietyStatusConverter.class)
+	private SocietyStatus societyStatus;
 
 	public Integer getSocietyId() {
 		return societyId;
@@ -63,6 +71,14 @@ public class Society {
 
 	public void setSocietyRoomCount(Integer societyRoomCount) {
 		this.societyRoomCount = societyRoomCount;
+	}
+
+	public SocietyStatus getSocietyStatus() {
+		return societyStatus;
+	}
+
+	public void setSocietyStatus(SocietyStatus societyStatus) {
+		this.societyStatus = societyStatus;
 	}
 	
 }

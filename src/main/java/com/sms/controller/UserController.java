@@ -28,12 +28,11 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@SuppressWarnings("deprecation")
 	@RequestMapping(method = RequestMethod.POST, path = "/login", produces = "application/json")
-	public ResponseEntity<Map> login(@RequestBody UserLogin requestBody) {
+	public ResponseEntity<Map<String, Object>> login(@RequestBody UserLogin requestBody) {
 		boolean validated = true;
 		
-		Map data = new HashMap();
+		Map<String, Object> data = new HashMap<String, Object>();
 		HttpStatus status;
 		
 		String userEmail = requestBody.getUserEmail();
@@ -70,7 +69,7 @@ public class UserController {
 			status = HttpStatus.UNAUTHORIZED;
 		}
 	
-		ResponseEntity<Map> responseEntity = new ResponseEntity<Map>(data, status);
+		ResponseEntity<Map<String, Object>> responseEntity = new ResponseEntity<Map<String, Object>>(data, status);
 		
 		return responseEntity;
 	}

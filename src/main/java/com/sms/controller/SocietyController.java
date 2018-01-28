@@ -1,6 +1,7 @@
 package com.sms.controller;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sms.domain.Subscription;
+import com.sms.domain.Transaction;
 import com.sms.domain.constant.SubscriptionStatus;
 import com.sms.domain.constant.SubscriptionType;
 import com.sms.domain.constant.TransactionType;
 import com.sms.exception.DuplicateDataException;
 import com.sms.payload.request.SocietyRegister;
 import com.sms.payload.request.SubscriptionSave;
+import com.sms.payload.request.TransactionSave;
 import com.sms.service.SocietyService;
 
 @Controller
@@ -34,7 +37,7 @@ public class SocietyController {
 	private SocietyService societyService;
 	
 	@RequestMapping(path = "/register", method = RequestMethod.PUT, consumes = "application/json", produces="application/json")
-	public ResponseEntity<Map> register(HttpServletRequest request, @RequestBody SocietyRegister requestBody) {
+	public ResponseEntity<Map<String, Object>> register(HttpServletRequest request, @RequestBody SocietyRegister requestBody) {
 		String societyName = requestBody.getSocietyName();
 		int countryId = requestBody.getCountryId();
 		int stateId = requestBody.getStateId();
@@ -53,10 +56,10 @@ public class SocietyController {
 		Float transactionAmount = requestBody.getTransactionAmount();
 		Integer transactionType = requestBody.getTransactionType();
 		
-		Map messages = new HashMap();
-		Map data = new HashMap();
+		Map<String, Object> messages = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<String, Object>();
 		
-		Map response = new HashMap();
+		Map<String, Object> response = new HashMap<String, Object>();
 		
 		response.put("messages", messages);
 		response.put("data", data);
@@ -154,59 +157,114 @@ public class SocietyController {
 			try {
 				societyService.register(requestBody);
 				
-				return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
+				return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
 			} catch(DuplicateDataException ex) {
-				return new ResponseEntity<Map>(HttpStatus.CONFLICT);
+				return new ResponseEntity<Map<String, Object>>(HttpStatus.CONFLICT);
 			} catch(SQLException sqlException) {
-				return new ResponseEntity<Map>(HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 		
-		return new ResponseEntity<Map>(response, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 	}
 	
 	@RequestMapping(path = "/getAllSocietySubscription", method = RequestMethod.GET)
-	public ResponseEntity<Map> getAllSocietySubscription() {
+	public ResponseEntity<Map<String, Object>> getAllSocietySubscription() {
 		List<Map<String, Object>> societySubscriptionList = societyService.getAllSocietySubscription();
 		
 		if(societySubscriptionList.size() != 0) {
-			Map response = new HashMap();
+			Map<String, Object> response = new HashMap<String, Object>();
 			
 			response.put("societySubscriptionList", societySubscriptionList);
 			
-			return new ResponseEntity<Map>(response, HttpStatus.OK);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
 	}
 	
 	@RequestMapping(path = "/getSubscriptionBySocietyId", method = RequestMethod.GET)
-	public ResponseEntity<Map> getSubscriptionBySocietyId(@RequestParam int societyId) {
+	public ResponseEntity<Map<String, Object>> getSubscriptionBySocietyId(@RequestParam int societyId) throws ParseException {
 		if(societyId > 0) {
-			List<Subscription> subscriptionList = societyService.getSubscriptionBySocietyId(societyId);
+			List<Map<String, Object>> subscriptionData = societyService.getSubscriptionBySocietyId(societyId);
 			
-			if(subscriptionList.size() != 0) {
-				Map response = new HashMap();
+			if(subscriptionData.size() != 0) {
+				Map<String, Object> response = new HashMap<String, Object>();
 				
-				response.put("subscriptionList", subscriptionList);
+				response.put("subscriptionList", subscriptionData);
 				
-				return new ResponseEntity<Map>(response, HttpStatus.OK);
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 			}
 			
-			return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
 		}
 		
-		return new ResponseEntity<Map>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Map<String, Object>>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@RequestMapping(path="/getTransactionBySubscriptionId", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> getTransactionBySubscriptionId(@RequestParam int subscriptionId) {
+		if(subscriptionId > 0) {
+			List<Map<String, Object>> transactionData = societyService.getTransactionBySubscriptionId(subscriptionId);
+			
+			if(transactionData != null) {
+				Map<String, Object> data = new HashMap<String, Object>();
+				
+				data.put("transaction", transactionData);
+				
+				return new ResponseEntity<Map<String, Object>>(data, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
+			}			
+		}
+		
+		return new ResponseEntity<Map<String, Object>>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@RequestMapping(path="/getSubscriptionForTransaction", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> getSubscriptionForTransaction(@RequestParam int subscriptionId) {
+		if(subscriptionId > 0) {
+			Map<String, Object> subscriptionTransaction = societyService.getSubscriptionForTransaction(subscriptionId);
+			
+			if(subscriptionTransaction != null) {
+				Map<String, Object> data = new HashMap<String, Object>();
+				
+				data.put("subscriptionTransaction", subscriptionTransaction);
+				
+				return new ResponseEntity<Map<String, Object>>(data, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
+			}			
+		}
+		
+		return new ResponseEntity<Map<String, Object>>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@RequestMapping(path="/getInfoForAddSubscription", method=RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> getInfoForAddSubscription(@RequestParam Integer societyId) throws ParseException {
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		Map<String, Object> messages = new HashMap<String, Object>();
+		
+		if(societyId != null && societyId > 0) {
+			response.put("subscription", societyService.getInfoForAddSubscription(societyId));
+			
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+		} else {
+			messages.put("societyId", "Society ID is manadatory.");
+		}
+		
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 	}
 	
 	@RequestMapping(path="/saveSubscription", method=RequestMethod.PUT)
-	public ResponseEntity<Map> saveSubscription(@RequestBody SubscriptionSave requestBody) {
+	public ResponseEntity<Map<String, Object>> saveSubscription(@RequestBody SubscriptionSave requestBody) {
 		Boolean validated = true;
 		
-		Map message = new HashMap();
-		Map data = new HashMap();
+		Map<String, Object> message = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<String, Object>();
 		
-		Map response = new HashMap();
+		Map<String, Object> response = new HashMap<String, Object>();
 		
 		response.put("message", message);
 		response.put("data", data);
@@ -226,28 +284,74 @@ public class SocietyController {
 			
 			data.put("subscriptionId", subscription.getSubscriptionId());
 			
-			return new ResponseEntity<Map>(response, HttpStatus.OK);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<Map>(response, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
 	
-	@RequestMapping(path="/getSubscriptionTransaction", method = RequestMethod.GET)
-	public ResponseEntity<Map> getSubscriptionTransaction(@RequestParam int subscriptionId) {
-		if(subscriptionId > 0) {
-			Map subscriptionTransaction = societyService.getSubscriptionTransaction(subscriptionId);
-			
-			if(subscriptionTransaction != null) {
-				Map data = new HashMap();
-				
-				data.put("subscriptionTransaction", subscriptionTransaction);
-				
-				return new ResponseEntity<Map>(data, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<Map>(HttpStatus.NO_CONTENT);
-			}			
+	@RequestMapping(path="/saveTransaction", method=RequestMethod.PUT)
+	public ResponseEntity<Map<String, Object>> saveTransaction(@RequestBody TransactionSave requestBody) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		Map<String, String> messages = new HashMap<String, String>();
+		
+		response.put("messages", messages);
+		
+		Integer subscriptionId = requestBody.getSubscriptionId();
+		Integer transactionType = requestBody.getTransactionType();
+		Float transactionAmount = requestBody.getTransactionAmount();
+		String transactionDetail = requestBody.getTransactionDetail();
+		
+		if(subscriptionId == null || subscriptionId == 0) {
+			messages.put("subscriptionId", "Subscription ID is manadatory.");
 		}
 		
-		return new ResponseEntity<Map>(HttpStatus.BAD_REQUEST);
+		if(!TransactionType.contains(transactionType)) {
+			messages.put("transactionType", "Transaction type is mandatory.");
+		}
+		
+		if(transactionAmount == null || transactionAmount <= 0) {
+			messages.put("transactionAmount", "Transaction amount should be a number.");
+		}
+		
+		if(TransactionType.parseEnum(transactionType) == TransactionType.CHEQUE && (transactionDetail == null || transactionDetail.equals(""))) {
+			messages.put("transactionDetail", "Transaction detail is mandatory for cheque payment.");
+		}
+		
+		if(messages.size() == 0) {
+			Transaction transaction = societyService.saveTransaction(requestBody);
+			
+			if(transaction != null) {
+				messages.put("form", "Transaction saved successfully.");
+				
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+			} else {
+				messages.put("form", "Something went wrong. Please try again.");
+				
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+	}
+	
+	@RequestMapping(path="/deleteTransaction", method=RequestMethod.DELETE)
+	public ResponseEntity<Map<String, Object>> deleteTransaction(@RequestParam Integer transactionId) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		if(transactionId != null && transactionId > 0) {
+			societyService.deleteTransaction(transactionId);
+			
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
+		} else {
+			Map<String, String> messages = new HashMap<String, String>();
+			
+			messages.put("transactionId", "Transaction ID is manadatory.");
+			
+			response.put("messages", messages);
+		}
+		
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 	}
 }

@@ -27,13 +27,13 @@ public class CountryController {
 	CountryService countryService;
 	
 	@RequestMapping(path = "/save", method=RequestMethod.PUT)
-	public ResponseEntity<Map> save(@RequestBody CountrySave requestBody) {
+	public ResponseEntity<Map<String, Object>> save(@RequestBody CountrySave requestBody) {
 		
 		Boolean validated = true;
 		
-		Map response = new HashMap();
-		Map messages = new HashMap();
-		Map data = new HashMap();
+		Map<String, Object> response = new HashMap<String, Object>();
+		Map<String, Object> messages = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<String, Object>();
 		
 		response.put("messages", messages);
 		response.put("data", data);
@@ -51,14 +51,14 @@ public class CountryController {
 		}
 		
 		if(!validated) {
-			return new ResponseEntity<Map>(response, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		} else {
 			if(countryService.getByCountryName(country.getCountryName()) == null) {
 				country = countryService.save(country);
 				data.put("countryId", country.getCountryId());
-				return new ResponseEntity<Map>(response, HttpStatus.OK);
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<Map>(HttpStatus.CONFLICT);
+				return new ResponseEntity<Map<String, Object>>(HttpStatus.CONFLICT);
 			}
 		}
 	}

@@ -27,14 +27,14 @@ public class StateController {
 	StateService stateService;
 	
 	@RequestMapping(path = "/save", method=RequestMethod.PUT, consumes = "application/json")
-	public ResponseEntity<Map> save(@RequestBody StateSave requestBody) {
+	public ResponseEntity<Map<String, Object>> save(@RequestBody StateSave requestBody) {
 		
 		State state = new State();		
 		Boolean validated = true;
 		
-		Map response = new HashMap();
-		Map messages = new HashMap();
-		Map data = new HashMap();
+		Map<String, Object> response = new HashMap<String, Object>();
+		Map<String, Object> messages = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<String, Object>();
 		
 		response.put("messages", messages);
 		response.put("data", data);
@@ -52,14 +52,14 @@ public class StateController {
 		}
 		
 		if(!validated) {
-			return new ResponseEntity<Map>(response, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		} else {
 			if(null == stateService.getByStateName(state.getStateName())) {
 				state = stateService.save(state);
 				data.put("stateId", state.getStateId());
-				return new ResponseEntity<Map>(response, HttpStatus.OK);
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<Map>(response, HttpStatus.CONFLICT);
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CONFLICT);
 			}
 		}
 	}

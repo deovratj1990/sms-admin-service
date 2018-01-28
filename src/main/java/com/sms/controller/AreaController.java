@@ -27,14 +27,14 @@ public class AreaController {
 	AreaService areaService;
 	
 	@RequestMapping(path = "/save", method=RequestMethod.PUT, consumes = "application/json")
-	public ResponseEntity<Map> save(@RequestBody AreaSave requestBody) {
+	public ResponseEntity<Map<String, Object>> save(@RequestBody AreaSave requestBody) {
 		
 		Area area = new Area();		
 		Boolean validated = true;
 		
-		Map response = new HashMap();
-		Map messages = new HashMap();
-		Map data = new HashMap();
+		Map<String, Object> response = new HashMap<String, Object>();
+		Map<String, Object> messages = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<String, Object>();
 		
 		response.put("messages", messages);
 		response.put("data", data);
@@ -52,14 +52,14 @@ public class AreaController {
 		}
 		
 		if(!validated) {
-			return new ResponseEntity<Map>(response, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		} else {
 			if(null == areaService.getByAreaName(area.getAreaName())) {
 				area = areaService.save(area);
 				data.put("areaId", area.getAreaId());
-				return new ResponseEntity<Map>(response, HttpStatus.OK);
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<Map>(response, HttpStatus.CONFLICT);
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CONFLICT);
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package com.sms.service.impl;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,12 +23,16 @@ import com.sms.domain.Society;
 import com.sms.domain.Subscription;
 import com.sms.domain.Transaction;
 import com.sms.domain.User;
+import com.sms.domain.constant.SocietyStatus;
+import com.sms.domain.constant.SubscriptionPaymentStatus;
 import com.sms.domain.constant.SubscriptionStatus;
 import com.sms.domain.constant.SubscriptionType;
+import com.sms.domain.constant.TransactionStatus;
 import com.sms.domain.constant.TransactionType;
 import com.sms.exception.DuplicateDataException;
 import com.sms.payload.request.SocietyRegister;
 import com.sms.payload.request.SubscriptionSave;
+import com.sms.payload.request.TransactionSave;
 import com.sms.repo.SocietyRepository;
 import com.sms.repo.SubscriptionRepository;
 import com.sms.repo.TransactionRepository;
@@ -88,8 +93,22 @@ public class SocietyServiceImpl implements SocietyService {
 			subscription.setSubscriptionStartDate(startDate);
 			subscription.setSubscriptionEndDate(endDate);
 			subscription.setSubscriptionCreatedOn(today);
+			
+			if(SubscriptionType.parseEnum(requestPayload.getSubscriptionType()) == SubscriptionType.PAID) {
+				if(TransactionType.parseEnum(requestPayload.getTransactionType()) == TransactionType.CASH) {
+					if(requestPayload.getTransactionAmount() < requestPayload.getSubscriptionAmount()) {
+						subscription.setSubscriptionPaymentStatus(SubscriptionPaymentStatus.PARTIAL);
+					} else {
+						subscription.setSubscriptionPaymentStatus(SubscriptionPaymentStatus.PAID);
+					}
+				} else {
+					subscription.setSubscriptionPaymentStatus(SubscriptionPaymentStatus.PENDING);
+				}
+			} else {
+				subscription.setSubscriptionPaymentStatus(SubscriptionPaymentStatus.NA);
+			}
+			
 			subscription.setSubscriptionStatus(SubscriptionStatus.ACTIVE);
-			subscription.setSubscriptionStatusModifiedBy(null);
 			
 			subscription = subscriptionRepository.save(subscription);
 			
@@ -99,6 +118,13 @@ public class SocietyServiceImpl implements SocietyService {
 				transaction.setSubscriptionId(subscription.getSubscriptionId());
 				transaction.setTransactionAmount(requestPayload.getTransactionAmount());
 				transaction.setTransactionType(TransactionType.parseEnum(requestPayload.getTransactionType()));
+				
+				if(transaction.getTransactionType() == TransactionType.CASH) {
+					transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
+				} else {
+					transaction.setTransactionStatus(TransactionStatus.PENDING);
+				}
+				
 				transaction.setTransactionDetail(requestPayload.getTransactionDetail());
 				transaction.setTransactionCreatedOn(today);
 				transaction.setTransactionCreatedBy(user.getUserId());
@@ -173,6 +199,7 @@ public class SocietyServiceImpl implements SocietyService {
 			
 			society.setSocietyWingCount(wingNameList.size());
 			society.setSocietyRoomCount(roomCount);
+			society.setSocietyStatus(SocietyStatus.ACTIVE);
 			
 			societyRepository.save(society);
 			
@@ -220,6 +247,8 @@ public class SocietyServiceImpl implements SocietyService {
 				societySubscription.put("subscriptionTypeText", subscription.getSubscriptionType().toString());
 				societySubscription.put("subscriptionStatus", subscription.getSubscriptionStatus().toInteger());
 				societySubscription.put("subscriptionStatusText", subscription.getSubscriptionStatus().toString());
+				societySubscription.put("subscriptionPaymentStatus", subscription.getSubscriptionPaymentStatus().toInteger());
+				societySubscription.put("subscriptionPaymentStatusText", subscription.getSubscriptionPaymentStatus().toString());
 				
 				Date subscriptionRenewalDate;
 				
@@ -239,25 +268,92 @@ public class SocietyServiceImpl implements SocietyService {
 	}
 
 	@Override
-	public List<Subscription> getSubscriptionBySocietyId(Integer societyId) {
-		List<Subscription> subscriptionList = subscriptionRepository.findBySocietyIdOrderBySubscriptionEndDateDesc(societyId);
+	public List<Map<String, Object>> getSubscriptionBySocietyId(Integer societyId) throws ParseException {
+		List<Object[]> subscriptionTransactionObjectList = subscriptionRepository.getSubscriptionTransactionBySocietyIdOrderBySubscriptionEndDateDesc(societyId, SubscriptionStatus.ACTIVE.toInteger(), SubscriptionStatus.FUTURE.toInteger(), TransactionStatus.PENDING.toInteger(), TransactionStatus.SUCCESSFUL.toInteger());
 		
-		return subscriptionList;
+		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		
+		for(Object[] subscriptionTransactionObject : subscriptionTransactionObjectList) {
+			Map<String, Object> datum = new HashMap<String, Object>();
+			
+			Double subscriptionAmount = ((subscriptionTransactionObject[7] != null) ? new Double(subscriptionTransactionObject[7].toString()) : 0);
+			
+			Double paidAmount = 0d;
+			
+			if(subscriptionTransactionObject[8] != null) {
+				paidAmount = new Double(subscriptionTransactionObject[8].toString());
+			}
+			
+			datum.put("subscriptionId", subscriptionTransactionObject[0]);
+			datum.put("societyId", subscriptionTransactionObject[1]);
+			datum.put("subscriptionStartDateText", df.format(sdf.parse(subscriptionTransactionObject[2].toString())));
+			datum.put("subscriptionEndDateText", df.format(sdf.parse(subscriptionTransactionObject[3].toString())));
+			datum.put("subscriptionTypeText", SubscriptionType.parseEnum((Integer) subscriptionTransactionObject[4]).toString());
+			datum.put("subscriptionStatus", (Integer) subscriptionTransactionObject[5]);
+			datum.put("subscriptionStatusText", SubscriptionStatus.parseEnum((Integer) subscriptionTransactionObject[5]).toString());
+			datum.put("subscriptionPaymentStatus", (Integer) subscriptionTransactionObject[6]);
+			datum.put("subscriptionPaymentStatusText", SubscriptionPaymentStatus.parseEnum((Integer) subscriptionTransactionObject[6]).toString());
+			
+			if(SubscriptionType.parseEnum((Integer) subscriptionTransactionObject[4]) == SubscriptionType.PAID) {
+				datum.put("subscriptionAmount", subscriptionAmount);
+				datum.put("paidAmount", paidAmount);
+			} else {
+				datum.put("subscriptionAmount", "NA");
+				datum.put("paidAmount", "NA");
+			}
+			
+			data.add(datum);
+		}
+		
+		return data;
 	}
 	
 	@Override
-	public Map<String, Object> getSubscriptionTransaction(Integer subscriptionId) {
-		List<Object[]> subscriptionTransactionListObject = subscriptionRepository.getSubscriptionTransaction(subscriptionId);
+	public List<Map<String, Object>> getTransactionBySubscriptionId(Integer subscriptionId) {
+		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+		
+		List<TransactionStatus> transactionStatusList = new ArrayList<TransactionStatus>();
+		
+		transactionStatusList.add(TransactionStatus.PENDING);
+		transactionStatusList.add(TransactionStatus.SUCCESSFUL);
+		
+		List<Transaction> transactionList = transactionRepository.findBySubscriptionIdAndTransactionStatusIn(subscriptionId, transactionStatusList);
+		
+		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		
+		if(transactionList != null) {
+			for(Transaction transaction : transactionList) {
+				Map<String, Object> datum = new HashMap<String, Object>();
+				
+				datum.put("transactionId", transaction.getTransactionId());
+				datum.put("transactionDateText", df.format(transaction.getTransactionCreatedOn()));
+				datum.put("transactionTypeText", transaction.getTransactionType().toString());
+				datum.put("transactionAmount", transaction.getTransactionAmount());
+				datum.put("transactionStatusText", transaction.getTransactionStatus().toString());
+				datum.put("transactionDetail", transaction.getTransactionDetail());
+				
+				data.add(datum);
+			}
+		}
+		
+		return data;
+	}
+	
+	@Override
+	public Map<String, Object> getSubscriptionForTransaction(Integer subscriptionId) {
+		Map<String, Object> subscriptionTransaction = new HashMap<String, Object>();
+		
+		List<Object[]> subscriptionTransactionListObject = subscriptionRepository.getSubscriptionForTransaction(subscriptionId);
 		
 		if(subscriptionTransactionListObject != null) {
 			Object[] subscriptionTransactionObject = subscriptionTransactionListObject.get(0);
 			
-			System.out.println((Float) subscriptionTransactionObject[1]);
-			
 			Subscription subscription = (Subscription) subscriptionTransactionObject[0];
-			Float paidAmount = ((subscriptionTransactionObject[1] != null) ? (Float) subscriptionTransactionObject[1] : 0);
-			Float balanceAmount = subscription.getSubscriptionAmount() - paidAmount;
-			Map<String, Object> subscriptionTransaction = new HashMap<String, Object>();
+			Double paidAmount = ((subscriptionTransactionObject[1] != null) ? new Double(subscriptionTransactionObject[1].toString()) : 0);
+			Double balanceAmount = subscription.getSubscriptionAmount() - paidAmount;
 			
 			SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 			
@@ -269,11 +365,34 @@ public class SocietyServiceImpl implements SocietyService {
 			subscriptionTransaction.put("subscriptionStatus", subscription.getSubscriptionStatus().toInteger());
 			subscriptionTransaction.put("paidAmount", paidAmount);
 			subscriptionTransaction.put("balanceAmount", balanceAmount);
-			
-			return subscriptionTransaction;
 		}
 		
-		return null;
+		return subscriptionTransaction;
+	}
+	
+	@Override
+	public Map<String, Object> getInfoForAddSubscription(Integer societyId) throws ParseException {
+		List<Object[]> infoObjectList = societyRepository.getInfoForAddSubscription(societyId);
+		
+		Object[] infoObject = infoObjectList.get(0);
+		
+		Map<String, Object> info = new HashMap<String, Object>();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		
+		Calendar c = Calendar.getInstance();
+		
+		c.setTime(sdf.parse(infoObject[1].toString()));
+		
+		c.add(Calendar.DATE, 1);
+		
+		Date subscriptionStartDate = c.getTime();
+		
+		info.put("societyRoomCount", new Integer(infoObject[0].toString()));
+		info.put("subscriptionStartDateText", df.format(subscriptionStartDate));
+		
+		return info;
 	}
 
 	@Override
@@ -289,5 +408,71 @@ public class SocietyServiceImpl implements SocietyService {
 		subscription.setSubscriptionStatus(SubscriptionStatus.parseEnum(requestPayload.getSubscriptionStatus()));
 		
 		return null;
+	}
+
+	@Override
+	public Transaction saveTransaction(TransactionSave requestPayload) {
+		Transaction transaction = new Transaction();
+		
+		transaction.setSubscriptionId(requestPayload.getSubscriptionId());
+		transaction.setTransactionType(TransactionType.parseEnum(requestPayload.getTransactionType()));
+		transaction.setTransactionAmount(requestPayload.getTransactionAmount());
+		transaction.setTransactionDetail(requestPayload.getTransactionDetail());
+		
+		if(transaction.getTransactionType() == TransactionType.CASH) {
+			transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
+		} else {
+			transaction.setTransactionStatus(TransactionStatus.PENDING);
+		}
+		
+		transaction.setTransactionCreatedOn(new Date());
+		
+		transaction.setTransactionCreatedBy(((User) request.getAttribute("user")).getUserId());
+		
+		transaction = transactionRepository.save(transaction);
+		
+		if(transaction != null) {
+			List<Object[]> subscriptionAmountInfo = subscriptionRepository.getSubscriptionAmountInfo(transaction.getSubscriptionId());
+			
+			Double subscriptionAmount = new Double(subscriptionAmountInfo.get(0)[0].toString());
+			Double paidAmount = new Double(subscriptionAmountInfo.get(0)[1].toString());
+			
+			Subscription subscription = subscriptionRepository.findOne(transaction.getSubscriptionId());
+			
+			if(paidAmount < subscriptionAmount) {
+				subscription.setSubscriptionPaymentStatus(SubscriptionPaymentStatus.PARTIAL);
+			} else if(paidAmount >= subscriptionAmount) {
+				subscription.setSubscriptionPaymentStatus(SubscriptionPaymentStatus.PAID);
+			}
+			
+			subscriptionRepository.save(subscription);
+			
+			return transaction;
+		}
+		
+		return null;
+	}
+	
+	public void deleteTransaction(Integer transactionId) {
+		Transaction transaction = transactionRepository.findOne(transactionId);
+		
+		transaction.setTransactionStatus(TransactionStatus.DELETED);
+		
+		transaction = transactionRepository.save(transaction);
+		
+		List<Object[]> subscriptionAmountInfo = subscriptionRepository.getSubscriptionAmountInfo(transaction.getSubscriptionId());
+		
+		Double subscriptionAmount = new Double(subscriptionAmountInfo.get(0)[0].toString());
+		Double paidAmount = ((subscriptionAmountInfo.get(0)[1] != null) ? new Double(subscriptionAmountInfo.get(0)[1].toString()) : 0);
+		
+		Subscription subscription = subscriptionRepository.findOne(transaction.getSubscriptionId());
+		
+		if(paidAmount == 0) {
+			subscription.setSubscriptionPaymentStatus(SubscriptionPaymentStatus.PENDING);
+		} else if(paidAmount < subscriptionAmount) {
+			subscription.setSubscriptionPaymentStatus(SubscriptionPaymentStatus.PARTIAL);
+		}
+		
+		subscriptionRepository.save(subscription);
 	}
 }

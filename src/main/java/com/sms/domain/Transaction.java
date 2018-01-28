@@ -86,6 +86,14 @@ public class Transaction {
 		this.transactionDetail = transactionDetail;
 	}
 
+	public TransactionStatus getTransactionStatus() {
+		return transactionStatus;
+	}
+
+	public void setTransactionStatus(TransactionStatus transactionStatus) {
+		this.transactionStatus = transactionStatus;
+	}
+
 	public Date getTransactionCreatedOn() {
 		return transactionCreatedOn;
 	}

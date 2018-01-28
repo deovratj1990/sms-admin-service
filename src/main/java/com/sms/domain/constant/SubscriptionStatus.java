@@ -4,11 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum SubscriptionStatus {
-	PAYMENT_PENDING(1, "Payment Pending"),
-	PARTIAL_PAYMENT(2, "Partial Payment"),
-	INACTIVE(3, "Inactive"),
-	EXPIRED(4, "Expired"),
-	ACTIVE(5, "Active");
+	ACTIVE(1, "Active"),
+	FUTURE(2, "Future"),
+	EXPIRED(3, "Expired"),
+	DELETED(4, "Deleted");
 	
 	private static Map<Integer, SubscriptionStatus> map;
 	
