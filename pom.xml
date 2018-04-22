@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.sms.service</groupId>
-	<artifactId>sms-service</artifactId>
+	<artifactId>sms-admin-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>sms-service</name>
+	<name>sms-admin-service</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
